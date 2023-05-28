@@ -138,21 +138,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 })
-
-/*
-      <Image
-        source={Logo}
-        style={[styles.logo, {height: height * 0.4}]}
-        resizeMode="contain"
-        />
-*/
-
-/*root: {
-  alignItems: 'center',
-  padding: 20,
-},
-logo: {
-  width: '70%',
-  maxWidth: 300,
-  maxHeight: 200,
-},*/
