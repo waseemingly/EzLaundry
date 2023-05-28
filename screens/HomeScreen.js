@@ -26,7 +26,9 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+     <Text>Logged in by: {auth.currentUser?.email}</Text> 
+     
+     <TouchableOpacity
       style={styles.button}>
         <Image
         style={{width: 90, height: 40}}
@@ -61,10 +63,7 @@ const HomeScreen = () => {
         resizeMode="cover"
         />
       </TouchableOpacity>
-
-      {/*
-      <Text>Email: {auth.currentUser?.email}</Text>
-      */}
+      
 
       <TouchableOpacity
         onPress={handleSignOut}
