@@ -13,13 +13,18 @@ The current situation in hostel laundries is a source of immense frustration for
 
 # Key features of application
 User registration
+
 Machine Booking
+
 Authentication System
+
 Payment Gateway
 
 # Extension features of application
 Cancellation Policy
+
 Notification System
+
 Penalties
 
 # User Stories
