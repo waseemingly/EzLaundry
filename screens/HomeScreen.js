@@ -73,7 +73,7 @@ const HomeScreen = () => {
         source={signout}
         resizeMode="cover"
         /> 
-        <Text style={styles.buttonText}>Sign out</Text>
+        {/* <Text style={styles.buttonText}>Sign out</Text> */}
       </TouchableOpacity>
 
       
@@ -107,16 +107,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 })
-
-
-{/*
-
-     <View style={styles.root}>
-        <Image
-          source={Logo}
-          style={[styles.logo, {height: height * 0.3}]}
-          resizeMode="contain"
-        />
-      </View>
-*/}
-
