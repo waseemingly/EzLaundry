@@ -64,7 +64,7 @@ const LoginScreen = () => {
           style={styles.input}
         />
         <TextInput
-          placeholder="Password"
+          placeholder="Pass"
           value={password}
           onChangeText={text => setPassword(text)}
           style={styles.input}
