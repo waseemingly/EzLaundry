@@ -83,8 +83,12 @@ const LoginScreen = () => {
           onPress={handleSignUp}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Register/Signup</Text>
+          <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
+
+          <Text style={styles.buttonforgotText}>Forgot Password</Text>
+        </TouchableOpacity>
+        
       </View>
   </KeyboardAvoidingView>
   )
@@ -133,6 +137,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
+    color: 'pink',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  buttonforgotText: {
     color: 'pink',
     fontWeight: '700',
     fontSize: 16,
