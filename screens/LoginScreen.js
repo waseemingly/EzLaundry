@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
 import { auth } from '../firebase'
-import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
+//import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import Logo from '../assets/Ezlaundry-icon.png';
 
 const LoginScreen = () => {
@@ -95,6 +95,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
+
         <TouchableOpacity
           onPress={handleLogin}
           style={styles.button}
@@ -107,6 +108,7 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonOutlineText}>Register</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={()=>resetPassword()}
           style={[styles.button, styles.buttonforgot]}
