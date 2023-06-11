@@ -5,7 +5,6 @@ import { auth } from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
-import RegisterScreen from './screens/RegisterScreen';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -104,8 +103,10 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          onPress={RegisterScreen}
+          onPress={() => navigation.navigate('Register')}
+          title = 'Register Details' 
           style={[styles.button, styles.buttonOutline]}
         >
           <Text style={styles.buttonOutlineText}>Sign up</Text>
