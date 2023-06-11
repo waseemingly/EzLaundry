@@ -80,7 +80,7 @@ const LoginScreen = () => {
 
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Login Email"
+          placeholder="Login Email 1"
           value={email}
           onChangeText={text => setEmail(text)}
           style={styles.input}
