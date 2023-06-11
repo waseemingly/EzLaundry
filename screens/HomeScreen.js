@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/core'
+
 import React from 'react'
 import { Button, useWindowDimensions, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import { auth } from '../firebase'
