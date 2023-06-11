@@ -5,6 +5,7 @@ import { auth } from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
+import RegisterScreen from './screens/RegisterScreen';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -123,7 +124,7 @@ const LoginScreen = () => {
   )
 }
 
-const RegisterScreen = () => {
+/*const RegisterScreen = () => {
   const navigation = useNavigation();
   
   const handleRegisterPress = () => {
@@ -186,7 +187,7 @@ const RegisterScreen = () => {
     </View>
 </KeyboardAvoidingView>
   )
-}
+}*/
 
 export default LoginScreen
 
