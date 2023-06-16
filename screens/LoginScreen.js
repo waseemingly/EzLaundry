@@ -44,7 +44,7 @@ const LoginScreen = () => {
       .catch(error => alert(error.message))
   }
 
-  const resetPassword=()=>{
+ /* const resetPassword=()=>{
     if (email!=null)
     {
         sendPasswordResetEmail(auth, email)
@@ -63,7 +63,7 @@ const LoginScreen = () => {
     else{
       alert("Please enter a valid email");
     }
-  }
+  }*/
 
   return (
     <KeyboardAvoidingView
@@ -125,70 +125,6 @@ const LoginScreen = () => {
   )
 }
 
-/*const RegisterScreen = () => {
-  const navigation = useNavigation();
-  
-  const handleRegisterPress = () => {
-      auth
-    .createUserWithEmailAndPassword(email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log('Registered with:', user.email);
-    })
-    .catch(error => alert(error.message))
-  };
-
-  return ( 
-      <KeyboardAvoidingView
-    style={styles.container}
-    behavior="padding"
-  >
-
-    <View style={styles.root}>
-      <Image
-      source={Logo1}
-      style={[styles.logo, {height: height * 0.4}]}
-      resizeMode="contain"
-      />
-    </View>
-
-    <View style={styles.inputContainer}>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={text => setEmail(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={text => setPassword(text)}
-        style={styles.input}
-        secureTextEntry
-      />
-      <TextInput
-        placeholder="Confirm Password"
-        value={password}
-        onChangeText={text => setPassword(text)}
-        style={styles.input}
-        secureTextEntry
-      />
-    </View>
-
-    <View style={styles.buttonContainer}>
-
-      <TouchableOpacity
-        onPress={RegisterScreen}
-        style={[styles.button, styles.buttonRegister]}
-      >
-        <Text style={styles.buttonRegisterText}>Register</Text>
-      </TouchableOpacity>
-
-      
-    </View>
-</KeyboardAvoidingView>
-  )
-}*/
 
 export default LoginScreen
 
