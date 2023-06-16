@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
-import { auth, firebase } from '../firebase'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions, Alert } from 'react-native'
+import { auth, firebase} from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
-import React, { useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
 import {firebase} from '../config'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
