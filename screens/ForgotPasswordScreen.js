@@ -5,6 +5,27 @@ import { auth, firebase } from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert } from 'react-native';
+import {firebase} from '../config'
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBIP1nL3YbxXsABT5foyaaVoMOMXizsdZo",
+    authDomain: "ezlaundry-9ec2a.firebaseapp.com",
+    projectId: "ezlaundry-9ec2a",
+    storageBucket: "ezlaundry-9ec2a.appspot.com",
+    messagingSenderId: "969724570074",
+    appId: "1:969724570074:web:d0abce76a5e88dee2c78e3",
+    measurementId: "G-J6JMJ0X4Z9"
+  };
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  
+  
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +33,7 @@ const ForgotPasswordScreen = () => {
     const handleResetPassword = () => {
       firebase
         .auth()
-        .sendPasswordResetEmail(email)
+        .sendPasswordResetEmail(firebase.auth().currentUser.email)
         .then(() => {
           Alert.alert('Reset Email Sent', 'Please check your email for password reset instructions.');
         })
