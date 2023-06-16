@@ -6,6 +6,8 @@ import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail 
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert } from 'react-native';
 import {firebase} from '../config'
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 
 const firebaseConfig = {
@@ -29,7 +31,20 @@ const firebaseConfig = {
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
-  
+
+    const navigation = useNavigation();
+    
+    const {height} = useWindowDimensions()
+
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+          navigation.replace("Home")
+        }
+      })
+    
+      return unsubscribe
+    }, [])
     const handleResetPassword = () => {
       firebase
         .auth()
@@ -40,6 +55,8 @@ const ForgotPasswordScreen = () => {
         .catch((error) => {
           Alert.alert('Error', error.message);
         });
+
+
     };
   
     return (
@@ -67,8 +84,9 @@ const ForgotPasswordScreen = () => {
 
       </View>
  </KeyboardAvoidingView>
-    );
-  };
+    )
+  }
+
   
   export default ForgotPasswordScreen;
   
