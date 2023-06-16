@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions, Alert } from 'react-native'
-import { auth, firebase} from '../firebase'
+import { auth} from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import {firebase} from '../config'
 import { initializeApp } from "firebase/app";
