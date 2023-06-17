@@ -1,5 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
+import App from "./App";
+import { AppRegistry, StyleSheet, Text, View }  from "react-native";
+  
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,6 +16,16 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
+// "project" is the name of the main react-native Folder
+// the second argument is an arrow function returning
+// App, which is imported above
+AppRegistry.registerComponent("ezlaundry", () => App);
+  
+// runApplication() loads the javascript bundle 
+// and runs the app.
+AppRegistry.runApplication("ezlaundry", {
+    rootTag: document.getElementById("root")
+});
 
 const Stack = createNativeStackNavigator();
 

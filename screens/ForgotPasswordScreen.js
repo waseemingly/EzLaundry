@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions, Alert } from 'react-native'
 import { auth } from '../firebase'
+import * as firebase from "firebase/compat";
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
