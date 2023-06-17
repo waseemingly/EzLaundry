@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import App from "./App";
-import { AppRegistry, StyleSheet, Text, View }  from "react-native";
+import { AppRegistry, Text, View }  from "react-native";
   
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
