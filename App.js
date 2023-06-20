@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+//import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -17,14 +17,14 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 // "project" is the name of the main react-native Folder
 // the second argument is an arrow function returning
 // App, which is imported above
-AppRegistry.registerComponent("ezlaundry", () => App);
-  
 // runApplication() loads the javascript bundle 
 // and runs the app.
+/*AppRegistry.registerComponent("ezlaundry", () => App);
+  
 AppRegistry.runApplication("ezlaundry", {
     rootTag: document.getElementById("root")
 });
-
+*/
 const Stack = createNativeStackNavigator();
 
 
@@ -36,7 +36,6 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen}/>
-        <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

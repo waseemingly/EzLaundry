@@ -2,7 +2,8 @@ import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
 import { auth } from '../firebase'
-import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
+//import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
+import * as firebase from "firebase/compat";
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
 
