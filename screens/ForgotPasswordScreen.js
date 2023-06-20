@@ -1,4 +1,4 @@
-/*import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions, Alert } from 'react-native'
 import { auth } from '../firebase'
@@ -96,4 +96,4 @@ const ForgotPasswordScreen = () => {
   }
   }
   )
-*/
+

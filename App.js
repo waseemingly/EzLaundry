@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import App from "./App";
+//import App from "./App";
 import { AppRegistry, StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
-//import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -36,6 +36,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Register" component={RegisterScreen}/>
+        <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
