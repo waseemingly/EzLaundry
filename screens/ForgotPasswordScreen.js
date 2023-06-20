@@ -6,7 +6,7 @@ import * as firebase from "firebase/compat";
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";      
-
+import Logo2 from '../assets/password.png';
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');
@@ -42,11 +42,21 @@ const ForgotPasswordScreen = () => {
       style={styles.container}
       behavior="padding"
     >
+
+      <View style={styles.root}>
+        <Image
+        source={Logo2}
+        style={[styles.logo, {height: height * 0.3}]}
+        resizeMode="contain"
+        />
+      </View>
+
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Enter your email"
           value={email}
           onChangeText={text => setEmail(text)}
+          style={styles.input}
         />
     </View>
        
@@ -79,20 +89,35 @@ const ForgotPasswordScreen = () => {
     },
     input: {
       backgroundColor: 'white',
-      paddingHorizontal: 15,
-      paddingVertical: 10,
+      paddingHorizontal: 20,
+      paddingVertical: 20,
       borderRadius: 10,
-      marginTop: 5,
+      marginTop: 10,
     },
-  buttonForgotPassword: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  buttonForgotPasswordText: {
-    color: 'pink',
-    fontWeight: '700',
-    fontSize: 16,
+    buttonContainer: {
+      width: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 40,
+    },
+    button: {
+      backgroundColor: 'white',
+      width: '100%',
+      padding: 15,
+      borderRadius:20,
+      borderColor: 'pink',
+      alignItems: 'center',
+    },
+    buttonForgotPassword: {
+      backgroundColor: 'white',
+      marginTop: 5,
+      borderColor: 'pink',
+      borderWidth: 2,
+    },
+    buttonForgotPasswordText: {
+      color: 'pink',
+      fontWeight: '800',
+      fontSize: 20,
   }
   }
   )

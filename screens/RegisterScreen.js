@@ -4,8 +4,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import { auth } from '../firebase'
 //import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import * as firebase from "firebase/compat";
-import Logo from '../assets/Ezlaundry-icon.png';
-import Logo1 from '../assets/booking.png';
+import Logo1 from '../assets/register.png';
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState('')
@@ -99,12 +98,26 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 20,
   },
-buttonRegister: {
+  buttonContainer: {
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  button: {
+    backgroundColor: 'white',
+    width: '100%',
+    padding:20,
+    borderRadius:20,
+    borderColor: 'pink',
+    alignItems: 'center',
+  },
+  buttonRegister: {
   color: 'white',
   fontWeight: '700',
   fontSize: 16,

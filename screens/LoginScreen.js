@@ -99,7 +99,7 @@ const LoginScreen = () => {
 
         <TouchableOpacity
           onPress={handleLogin}
-          style={styles.button}
+          style={[styles.button, styles.buttonlogin]}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
@@ -109,7 +109,7 @@ const LoginScreen = () => {
           title = 'Register Details' 
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Sign up</Text>
+          <Text style={styles.buttonOutlineText}>Don't have an account? Sign up</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -139,22 +139,23 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 10,
   },
   buttonContainer: {
-    width: '50%',
+    width: '80%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
   button: {
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
     width: '100%',
     padding: 15,
-    borderRadius: 10,
+    borderRadius:20,
+    borderColor: 'pink',
     alignItems: 'center',
   },
   buttonOutline: {
@@ -164,9 +165,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   buttonText: {
-    color: 'white',
+    color: 'pink',
     fontWeight: '700',
     fontSize: 16,
+  },
+  buttonlogin: {
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: 'pink',
+    borderWidth: 2,
   },
   buttonOutlineText: {
     color: 'pink',
@@ -174,12 +181,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonforgot: {
-      color: 'blue',
-      fontWeight: '700',
-      fontSize: 16,
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: 'pink',
+    borderWidth: 2,
   },
   buttonforgotText: {
-    color: 'blue',
+    color: 'pink',
     fontWeight: '700',
     fontSize: 16,
  }
