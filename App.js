@@ -9,7 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CalendarScreen from './screens/CalendarScreen';
-import BookTimeslotScreen from './screens/BookTimeslotScreeen';
+import BookTimeslotScreen from './screens/BookTimeslotScreen';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
