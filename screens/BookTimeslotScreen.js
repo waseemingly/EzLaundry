@@ -1,4 +1,4 @@
-import {
+/*import {
     AppRegistry,
     StyleSheet,
     Text,
@@ -69,4 +69,4 @@ import {
     container: {
       flex: 1
     }
-  });
+  });*/

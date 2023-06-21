@@ -9,7 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CalendarScreen from './screens/CalendarScreen';
-import BookTimeslotScreen from './screens/BookTimeslotScreen';
+//import BookTimeslotScreen from './screens/BookTimeslotScreen';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -41,7 +41,7 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen}/>
         <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen}/>
         <Stack.Screen name="Calendar" component={CalendarScreen}/>
-        <Stack.Screen name="Book Timeslot" component={BookTimeslotScreen}/>
+        {/* <Stack.Screen name="Book Timeslot" component={BookTimeslotScreen}/> */}
 
            
       </Stack.Navigator>
