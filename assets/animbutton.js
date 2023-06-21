@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default class Animbutton extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       countCheck: 0,
       onColor: 'green',
