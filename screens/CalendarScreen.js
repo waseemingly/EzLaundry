@@ -20,7 +20,7 @@ export default class Calc extends Component {
     this.setState({
       selected: day.dateString
     });
-    this.props.navigation.navigate('Slot', { bookingDate : day })
+    this.props.navigation.navigate('Book Timeslot', { bookingDate : day })
   }
   _onPressBack(){
     const {goBack} = this.props.navigation
