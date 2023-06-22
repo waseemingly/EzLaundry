@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
-import { auth } from '../firebase'
 //import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import * as firebase from "firebase/compat";
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+//import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 import Logo1 from '../assets/register.png';
+import { auth, firestore } from '../firebase';
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState('')
@@ -24,39 +24,68 @@ const RegisterScreen = () => {
   
       return unsubscribe
     }, [])
+    // const handleRegisterPress = () => {
+    //     auth
+    //   .createUserWithEmailAndPassword(email, password)
+    //   .then(userCredentials => {
+    //     const user = userCredentials.user;
+    //     console.log('Registered with:', user.email);
+    //   })
+    //   .catch(error => alert(error.message))
+
+    //   const db = getFirestore();
+
+    //   // Create a user document in Firestore
+    //   const usersCollectionRef = collection(db, 'users');
+    //   const userRef = doc(usersCollectionRef, user.uid);
+    //   setDoc(userRef, {
+    //     email: user.email,
+    //   })
+    //     .then(() => {
+    //       console.log('User document created in Firestore');
+    //       // Redirect to the home screen or any other screen
+    //       navigation.replace('Home');
+    //     })
+    //     .catch(error => {
+    //       console.log('Error creating user document in Firestore:', error);
+    //       alert('Registration failed. Please try again.');
+    //     })
+    //     .catch(error => {
+    //      console.log('Error registering user:', error);
+    //      alert(error.message);
+    // });
+
+    // };
     const handleRegisterPress = () => {
-        auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-      })
-      .catch(error => alert(error.message))
-
-      const db = getFirestore();
-
-      // Create a user document in Firestore
-      const usersCollectionRef = collection(db, 'users');
-      const userRef = doc(usersCollectionRef, user.uid);
-      setDoc(userRef, {
-        email: user.email,
-      })
-        .then(() => {
-          console.log('User document created in Firestore');
-          // Redirect to the home screen or any other screen
-          navigation.replace('Home');
-        })
-        .catch(error => {
-          console.log('Error creating user document in Firestore:', error);
-          alert('Registration failed. Please try again.');
-        })
-        .catch(error => {
-         console.log('Error registering user:', error);
-         alert(error.message);
-    });
-
-    };
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then(userCredentials => {
+          const user = userCredentials.user;
+          console.log('Registered with:', user.email);
   
+          // Use the firestore module for Firestore operations
+          firestore
+            .collection('users')
+            .doc(user.uid)
+            .set({
+              email: user.email,
+            })
+            .then(() => {
+              console.log('User document created in Firestore');
+              // Redirect to the home screen or any other screen
+              navigation.replace('Home');
+            })
+            .catch(error => {
+              console.log('Error creating user document in Firestore:', error);
+              alert('Registration failed. Please try again.');
+            });
+        })
+        .catch(error => {
+          console.log('Error registering user:', error);
+          alert(error.message);
+        });
+    }; 
+
     return ( 
         <KeyboardAvoidingView
       style={styles.container}
