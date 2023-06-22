@@ -36,7 +36,8 @@ const RegisterScreen = () => {
       const db = getFirestore();
 
       // Create a user document in Firestore
-      const userRef = doc(db, 'users', user.uid);
+      const usersCollectionRef = collection(db, 'users');
+      const userRef = doc(usersCollectionRef, user.uid);
       setDoc(userRef, {
         email: user.email,
       })
