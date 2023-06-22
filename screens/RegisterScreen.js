@@ -70,7 +70,6 @@ const RegisterScreen = () => {
 
           setDoc(doc(db,"users",`${uid}`),{
               email:user,
-              phone:phone
           })
         })
     }; 
