@@ -31,6 +31,17 @@ const RegisterScreen = () => {
         console.log('Registered with:', user.email);
       })
       .catch(error => alert(error.message))
+
+      firestore.collection('users').doc(user.uid).set({
+        email: user.email,
+      }).then(() => {
+        console.log('User document created in Firestore');
+        // Redirect to the home screen or any other screen
+        navigation.replace('Home');
+      }).catch(error => {
+        console.log('Error creating user document in Firestore:', error);
+        alert('Registration failed. Please try again.');
+      });
     };
   
     return ( 
