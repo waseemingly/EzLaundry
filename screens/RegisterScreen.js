@@ -1,9 +1,10 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
-import { auth, firestore } from '../firebase'
+import { auth } from '../firebase'
 //import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import * as firebase from "firebase/compat";
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 import Logo1 from '../assets/register.png';
 
 const RegisterScreen = () => {
@@ -32,16 +33,27 @@ const RegisterScreen = () => {
       })
       .catch(error => alert(error.message))
 
-      firestore.collection('users').doc(user.uid).set({
+      const db = getFirestore();
+
+      // Create a user document in Firestore
+      const userRef = doc(db, 'users', user.uid);
+      setDoc(userRef, {
         email: user.email,
-      }).then(() => {
-        console.log('User document created in Firestore');
-        // Redirect to the home screen or any other screen
-        navigation.replace('Home');
-      }).catch(error => {
-        console.log('Error creating user document in Firestore:', error);
-        alert('Registration failed. Please try again.');
-      });
+      })
+        .then(() => {
+          console.log('User document created in Firestore');
+          // Redirect to the home screen or any other screen
+          navigation.replace('Home');
+        })
+        .catch(error => {
+          console.log('Error creating user document in Firestore:', error);
+          alert('Registration failed. Please try again.');
+        })
+        .catch(error => {
+         console.log('Error registering user:', error);
+         alert(error.message);
+    });
+
     };
   
     return ( 
