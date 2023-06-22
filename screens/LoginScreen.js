@@ -24,15 +24,7 @@ const LoginScreen = () => {
     return unsubscribe
   }, [])
 
- /* const handleSignUp = () => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-      })
-      .catch(error => alert(error.message))
-  }*/
+
 
   const handleLogin = () => {
     auth
@@ -44,26 +36,6 @@ const LoginScreen = () => {
       .catch(error => alert(error.message))
   }
 
- /* const resetPassword=()=>{
-    if (email!=null)
-    {
-        sendPasswordResetEmail(auth, email)
-        .then(() => { 
-          alert('password reset email has been sent successfully');
-          //Password reset email sent!
-          //..
-        })
-        .catch((error) => {
-          const errorCode =error.code;
-          const errorMessage = error.message;
-          alert(errorMessage);
-          //..
-        });
-    }
-    else{
-      alert("Please enter a valid email");
-    }
-  }*/
 
   return (
     <KeyboardAvoidingView
@@ -116,7 +88,7 @@ const LoginScreen = () => {
           onPress={()=> navigation.navigate('Forgot Password')}
           style={[styles.button, styles.buttonforgot]}
         >
-          <Text style={styles.buttonforgotText}>Forgot Password </Text>
+          <Text style={styles.buttonforgotText}>Forgot Password ? </Text>
         </TouchableOpacity>
 
         
