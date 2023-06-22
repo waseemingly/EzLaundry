@@ -62,14 +62,13 @@ const RegisterScreen = () => {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(userCredentials => {
+          //const user = userCredentials.user;
           const user = userCredentials.user;
-          console.log('Registered with:', user.email);
-  
-          //const user = userCredentials._tokenResponse.email;
           const uid = auth.currentUser.uid;
+          console.log('Registered with:', user.email);
 
           setDoc(doc(db,"users",`${uid}`),{
-              email:user,
+              email: user.email
           })
         })
     }; 

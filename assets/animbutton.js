@@ -1,7 +1,7 @@
 // animbutton.js
 
 
-import React, { Component } from 'react';
+import {React, Component}from 'react';
 import {
   Text,
   TouchableWithoutFeedback
