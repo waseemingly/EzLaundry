@@ -28,7 +28,7 @@ const HomeScreen = () => {
      <Text>Logged in by: {auth.currentUser?.email}</Text> 
      
      <TouchableOpacity
-      onPress={() => navigation.navigate('Calendar')} 
+      onPress={() => navigation.navigate('Book Timeslot')} 
       style={styles.button}>
         <Image
         style={{width: 90, height: 40}}
