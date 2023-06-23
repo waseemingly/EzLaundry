@@ -8,6 +8,9 @@ import authenticate from '../assets/authenticate.png';
 import cancel from '../assets/Cancel.png';
 import penalties from '../assets/penalties.png';
 import signout from '../assets/signout.png';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
+
 
 const HomeScreen = () => {
   const navigation = useNavigation()
@@ -28,7 +31,7 @@ const HomeScreen = () => {
      <Text>Logged in by: {auth.currentUser?.email}</Text> 
      
      <TouchableOpacity
-      onPress={() => navigation.navigate('Calendar')} 
+      onPress={() => navigation.navigate('Book Timeslot')} 
       style={styles.button}>
         <Image
         style={{width: 90, height: 40}}
