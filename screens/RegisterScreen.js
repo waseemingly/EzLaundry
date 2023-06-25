@@ -12,6 +12,7 @@ import { setDoc,doc } from 'firebase/firestore';
 const RegisterScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmpassword, setConfirmPassword] = useState('')
 
     const navigation = useNavigation();
     
@@ -26,43 +27,17 @@ const RegisterScreen = () => {
   
       return unsubscribe
     }, [])
-    // const handleRegisterPress = () => {
-    //     auth
-    //   .createUserWithEmailAndPassword(email, password)
-    //   .then(userCredentials => {
-    //     const user = userCredentials.user;
-    //     console.log('Registered with:', user.email);
-    //   })
-    //   .catch(error => alert(error.message))
-
-    //   const db = getFirestore();
-
-    //   // Create a user document in Firestore
-    //   const usersCollectionRef = collection(db, 'users');
-    //   const userRef = doc(usersCollectionRef, user.uid);
-    //   setDoc(userRef, {
-    //     email: user.email,
-    //   })
-    //     .then(() => {
-    //       console.log('User document created in Firestore');
-    //       // Redirect to the home screen or any other screen
-    //       navigation.replace('Home');
-    //     })
-    //     .catch(error => {
-    //       console.log('Error creating user document in Firestore:', error);
-    //       alert('Registration failed. Please try again.');
-    //     })
-    //     .catch(error => {
-    //      console.log('Error registering user:', error);
-    //      alert(error.message);
-    // });
-
-    // };
+  
     const handleRegisterPress = () => {
+
+      if (password !== confirmpassword) {
+        alert("Passwords don't match");
+        return;
+      }
+
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(userCredentials => {
-          //const user = userCredentials.user;
           const user = userCredentials.user;
           const uid = auth.currentUser.uid;
           console.log('Registered with:', user.email);
@@ -95,7 +70,7 @@ const RegisterScreen = () => {
           style={styles.input}
         />
         <TextInput
-          placeholder="Password"
+          placeholder="New Password"
           value={password}
           onChangeText={text => setPassword(text)}
           style={styles.input}
@@ -103,8 +78,8 @@ const RegisterScreen = () => {
         />
         <TextInput
           placeholder="Confirm Password"
-          value={password}
-          onChangeText={text => setPassword(text)}
+          value={confirmpassword}
+          onChangeText={text => setConfirmPassword(text)}
           style={styles.input}
           secureTextEntry
         />

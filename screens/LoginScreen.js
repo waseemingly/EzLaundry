@@ -5,22 +5,24 @@ import { auth } from '../firebase'
 import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState('false')
 
   const navigation = useNavigation()
 
   const {height} = useWindowDimensions()
 
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         navigation.replace("Home")
       }
     })
-
     return unsubscribe
   }, [])
 
@@ -96,7 +98,6 @@ const LoginScreen = () => {
   </KeyboardAvoidingView>
   )
 }
-
 
 export default LoginScreen
 

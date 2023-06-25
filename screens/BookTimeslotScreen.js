@@ -11,18 +11,49 @@ import {
 import React, { useState } from "react";
 import HorizontalDatepicker from "@awrminkhodaei/react-native-horizontal-datepicker";
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase'; // Assuming you have already initialized Firebase and obtained the Firestore instance
+import { format } from 'date-fns';
+import { Picker } from '@react-native-picker/picker';
+import { collection, addDoc, getDocs, updateDoc, doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase'; // Assuming you have already initialized Firebase and obtained the Firestore instance
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 
+const residences = [
+  {
+    id: "0",
+    name: "Eusoff Hall",
+  },
+  {
+    id: "1",
+    name: "Kent Ridge Hall",
+  },
+  {
+    id: "2",
+    name: "King Edward VII Hall",
+  },
+  {
+    id: "3",
+    name: "Raffles Hall",
+  },
+  {
+    id: "4",
+    name: "Sheares Hall",
+  },
+  {
+    id: "5",
+    name: "Temasek Hall",
+  },
+];
 
 const BookTimeslotScreen = () => {
+  const [selectedResidence, setSelectedResidence] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState([]);
   const [machine, setMachine] = useState([]);
+  const route = useRoute();
+  const userUid = auth.currentUser ? auth.currentUser.uid : null;
   const washingMachine = [
     {
       id: "0",
@@ -137,106 +168,115 @@ const BookTimeslotScreen = () => {
   ];
 
   const navigation = useNavigation();
-  const proceedToConfirm = () => {
-      if(!selectedDate || !selectedTime || !machine ){
-        Alert.alert(
-            "Invalid Booking",
-            "Please select all the fields",
-            [
-              {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
-              },
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ],
-            { cancelable: false }
-          );
+  const proceedToConfirm = async () => {
+    if (!selectedDate || !selectedTime || !machine) {
+      Alert.alert(
+        "Invalid Booking",
+        "Please select all the fields",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+      );
+    }
+    if (selectedDate && selectedTime && machine) {
+      navigation.navigate("My Bookings", {
+        selectedResidence: selectedResidence,
+        selectedDate: selectedDate,
+        selectedTime: selectedTime,
+        selectedMachine: machine,
+        email: auth.currentUser?.email || '',
       }
-      if(selectedDate && selectedTime && machine){
-        navigation.navigate("Confirm Booking",{
-            pickUpDate:selectedDate,
-            selectedTime:selectedTime,
-            no_Of_days:machine,
+      )
 
-        })
+      try {
+        const userCollectionRef = collection(db, 'users');
+
+        const userEmail = auth.currentUser?.email || '';
+        const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
+
+        const bookingData = {
+          selectedResidence: selectedResidenceName ,
+          selectedDate,
+          selectedTime,
+          machine,
+          userEmail,
+          bookingId: '',
+        };
+
+        const bookingDocRef = await addDoc(userCollectionRef, bookingData);
+
+        bookingData.bookingId = bookingDocRef.id;
+
+        await setDoc(bookingDocRef, bookingData);
+
+        navigation.navigate("My Bookings", {
+          selectedResidence,
+          selectedDate,
+          selectedTime,
+          selectedMachine: machine,
+          bookingId: bookingData.bookingId,
+          userEmail: auth.currentUser?.email || '',
+        });
+
+        // navigation.navigate("Homebook",  {
+        //   selectedDate,
+        //   selectedTime,
+        //   selectedMachine: machine,
+        //   bookingId: bookingData.bookingId,
+        // });
+
+
+      } catch (error) {
+        console.error('Error storing booking data:', error);
+        // Handle the error
       }
+    }
   }
 
-  // const bookTimeslot = async () => {
-  //   // Perform the booking logic here
-  //   // Retrieve the selected date, time, and machine from state variables
 
-  //   try {
-  //     // Create a new document in the "bookingSlots" collection
-  //     const docRef = await addDoc(collection(db, 'bookingSlots'), {
-  //       selectedDate,
-  //       selectedTime,
-  //       machine,
-  //       taken: false, // Initialize the "taken" property as false
-  //     });
-
-  //     // Print the ID of the newly created document
-  //     console.log('Booking document created with ID:', docRef.id);
-  //   } catch (error) {
-  //     console.error('Error creating booking document:', error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const fetchBookingSlots = async () => {
-  //     try {
-  //       // Retrieve all the booking slots from Firestore
-  //       const querySnapshot = await getDocs(collection(db, 'bookingSlots'));
-
-  //       // Loop through the documents and update the state or availability of each timeslot
-  //       querySnapshot.forEach((doc) => {
-  //         const { selectedTime, taken } = doc.data();
-
-  //         // Update the state or availability of the timeslot based on the "taken" property
-  //         // For example, you can modify the "times" array to include the "taken" property
-  //         const updatedTimes = times.map((time) =>
-  //           time.time === selectedTime ? { ...time, taken } : time
-  //         );
-
-  //         // Update the state with the modified times array
-  //         setTimes(updatedTimes);
-  //       });
-  //     } catch (error) {
-  //       console.error('Error fetching booking slots:', error);
-  //     }
-  //   };
-
-  //   // Call the fetchBookingSlots function when the component mounts
-  //   fetchBookingSlots();
-  // }, []);
 
   return (
     <SafeAreaView>
+      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
+        Select Residence
+      </Text>
       <View
-          style={{
-            padding: 10,
-            margin: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderWidth: 0.8,
-            borderColor: "#C0C0C0",
-            borderRadius: 7,
-          }}
+        style={styles.searchContainer}>
+        <Picker
+          style={styles.picker}
+          selectedValue={selectedResidence}
+          onValueChange={setSelectedResidence}
         >
-          <TextInput placeholder="Search for your residence" />
-          <Feather name="search" size={24} color="#fd5c63" />
-        </View>
+          <Picker.Item label="Select Residence" value="" />
+          {residences.map(({ id, name }) => (
+            <Picker.Item key={id} label={name} value={id} />
+          ))}
+        </Picker>
+
+        {/* <Feather name="search" size={24} color="#fd5c63" /> */}
+      </View>
 
       <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
         Select Date
       </Text>
 
+      <Text style={{
+        fontSize: 18, fontWeight: "400", color: "#088F8F",
+      }}
+      >
+        {route.params && route.params.selectedDate}
+      </Text>
+
       <HorizontalDatepicker
         mode="gregorian"
-        startDate={new Date('2023-06-23')}
-        endDate={new Date('2023-06-30')}
+        startDate={new Date('2023-06-26')}
+        endDate={new Date('2023-07-05')}
         initialSelectedDate={new Date('2020-08-22')}
         onSelectedDateChange={(date) => setSelectedDate(date)}
         selectedItemWidth={170}
@@ -254,81 +294,95 @@ const BookTimeslotScreen = () => {
         Select Time
       </Text>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {times.map((item, index) => (
-            <Pressable
-              key={index}
-              onPress={() => setSelectedTime(item.time)}
-              style={
-                selectedTime.includes(item.time)
-                  ? {
-                      margin: 10,
-                      borderRadius: 7,
-                      padding: 15,
-                      borderColor: "red",
-                      borderWidth: 0.7,
-                    }
-                  : {
-                      margin: 10,
-                      borderRadius: 7,
-                      padding: 15,
-                      borderColor: "gray",
-                      borderWidth: 0.7,
-                    }
-              }
-            >
-              <Text>{item.time}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-        <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
-          Select Washing Machine
-        </Text>
+      <Text style={{
+        fontSize: 18, fontWeight: "400", color: "#088F8F",
+      }}
+      >
+        {route.params && route.params.selectedTime}
+      </Text>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {washingMachine.map((item, i) => (
-            <Pressable
-              style={
-                machine.includes(item.name)
-                  ? {
-                      margin: 10,
-                      borderRadius: 7,
-                      padding: 15,
-                      borderColor: "red",
-                      borderWidth: 0.7,
-                    }
-                  : {
-                      margin: 10,
-                      borderRadius: 7,
-                      padding: 15,
-                      borderColor: "gray",
-                      borderWidth: 0.7,
-                    }
-              }
-              onPress={() => setMachine(item.name)}
-              key={i}
-            >
-              <Text>{item.name}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {times.map((item, index) => (
+          <Pressable
+            key={index}
+            onPress={() => setSelectedTime(item.time)}
+            style={
+              selectedTime.includes(item.time)
+                ? {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "red",
+                  borderWidth: 0.7,
+                }
+                : {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "gray",
+                  borderWidth: 0.7,
+                }
+            }
+          >
+            <Text>{item.time}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
+        Select Washing Machine
+      </Text>
+
+      <Text style={{
+        fontSize: 18, fontWeight: "400", color: "#088F8F",
+      }}
+      >
+        {route.params && route.params.selectedMachine}
+      </Text>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {washingMachine.map((item, i) => (
+          <Pressable
+            style={
+              machine.includes(item.name)
+                ? {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "red",
+                  borderWidth: 0.7,
+                }
+                : {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "gray",
+                  borderWidth: 0.7,
+                }
+            }
+            onPress={() => setMachine(item.name)}
+            key={i}
+          >
+            <Text>{item.name}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
 
       <Pressable
         style={{
           backgroundColor: "pink",
-          marginTop: 200,
-          padding: 10,
-          marginBottom: 40,
-          margin: 15,
-          borderRadius: 7,
+          marginTop: 10,
+          padding: 20,
+          marginBottom: 50,
+          margin: 80,
+          borderRadius: 10,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           alignSelf: "flex-end",
-          width: "90%"
+          width: "60%"
         }}
       >
-        <View>
+        {/* <View>
           <Text style={{ fontSize: 17, fontWeight: "600", color: "white" }}>
           </Text>
           <Text
@@ -340,14 +394,22 @@ const BookTimeslotScreen = () => {
               marginHorizontal: 60
             }}
           >
-              {/* Confirm Booking */}
+            Confirm Booking 
           </Text>
-        </View>
+        </View> 
+        */}
 
         <Pressable onPress={proceedToConfirm}>
-          <Text style={{ fontSize: 17, fontWeight: "600", color: "white", marginVertical: 7, marginHorizontal: "5%", textAlign: "center"}}>
+          <Text style={{
+            fontSize: 17,
+            fontWeight: "600",
+            color: "white",
+            textAlign: "center",
+            marginLeft: 30
+          }}>
             Confirm Booking
           </Text>
+
         </Pressable>
       </Pressable>
     </SafeAreaView>

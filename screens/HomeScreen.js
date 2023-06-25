@@ -1,19 +1,24 @@
 import { useNavigation } from '@react-navigation/core'
-
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, useWindowDimensions, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import { auth } from '../firebase'
 import booking from '../assets/booking.png';
-import authenticate from '../assets/authenticate.png';
+import mybookings from '../assets/mybookings.png';
 import cancel from '../assets/Cancel.png';
 import penalties from '../assets/penalties.png';
 import signout from '../assets/signout.png';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
+import { HeaderBackButton } from '@react-navigation/stack';
 
 
 const HomeScreen = () => {
   const navigation = useNavigation()
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: false, // Remove the back button
+    });
+  }, [navigation]);
 
   const handleSignOut = () => {
     auth
@@ -25,7 +30,7 @@ const HomeScreen = () => {
   }
 
   const {height} = useWindowDimensions()
-
+  
   return (
     <View style={styles.container}>
      <Text>Logged in by: {auth.currentUser?.email}</Text> 
@@ -41,15 +46,16 @@ const HomeScreen = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
+        onPress={() => navigation.navigate('My Bookings', {bookingId: "uPYMeMclqfGDHY3zp91U"})}
         style={styles.button}>
         <Image
-        style={{width: 90, height: 40}}
-        source={authenticate}
+        style={{width: 80, height: 50}}
+        source={mybookings}
         resizeMode="cover"
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.button}>
         <Image
         style={{width: 90, height: 40}}
@@ -65,7 +71,7 @@ const HomeScreen = () => {
         source={penalties}
         resizeMode="cover"
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       
 
       <TouchableOpacity
@@ -77,11 +83,7 @@ const HomeScreen = () => {
         resizeMode="cover"
         /> 
         {/* <Text style={styles.buttonText}>Sign out</Text> */}
-      </TouchableOpacity>
-
-      
-  
-      
+      </TouchableOpacity>    
     </View>
 
   )
