@@ -46,7 +46,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('My Bookings', {bookingId: "uPYMeMclqfGDHY3zp91U"})}
+        onPress={() => navigation.navigate('My Bookings', {bookingId: ""})}
         style={styles.button}>
         <Image
         style={{width: 80, height: 50}}

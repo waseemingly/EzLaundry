@@ -169,7 +169,7 @@ const BookTimeslotScreen = () => {
 
   const navigation = useNavigation();
   const proceedToConfirm = async () => {
-    if (!selectedDate || !selectedTime || !machine) {
+    if (!selectedDate || !selectedTime || !machine || !selectedResidence) {
       Alert.alert(
         "Invalid Booking",
         "Please select all the fields",
@@ -184,7 +184,7 @@ const BookTimeslotScreen = () => {
         { cancelable: false }
       );
     }
-    if (selectedDate && selectedTime && machine) {
+    if (selectedDate && selectedTime && machine && selectedResidence) {
       navigation.navigate("My Bookings", {
         selectedResidence: selectedResidence,
         selectedDate: selectedDate,

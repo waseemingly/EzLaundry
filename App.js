@@ -41,7 +41,6 @@ export default function App() {
         <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen}/>
         <Stack.Screen name="Book Timeslot" component={BookTimeslotScreen}/>
         <Stack.Screen name="My Bookings" component={MyBookingsScreen} />
-        <Stack.Screen name="Homebook" component={Homebook} />
       </Stack.Navigator>
     </NavigationContainer>
   );
