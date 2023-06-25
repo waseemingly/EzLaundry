@@ -14,29 +14,30 @@ The current situation in hostel laundries is a source of immense frustration for
 # Key features of application
 User registration
 
-Machine Booking
+Washing Machine Booking
 
-Authentication System
-
-Payment Gateway
+Cancellation Policy
 
 # Extension features of application
-Cancellation Policy
+Paayment Gateway
 
 Notification System
 
 Penalties
 
 # User Stories
-Reservation Convenience: The app allows students in residence halls, hostels, or residential colleges to reserve time slots for using washing machines or dryers in the laundry, eliminating the need for frequent checking of availability.
 
-Planning Ahead: By checking the app, students can easily determine machine availability and plan their washing schedules in advance, ensuring a hassle-free laundry experience.
+As a hostel resident, I want to be able to reserve a time slot for using the washing machine or dryer in the laundry, so that I can plan my washing schedule ahead of time and avoid the need to frequently check the availability of machines in person.
 
-Timely Reminders: The app provides alarms or notifications to remind users when their reserved time slots are up, preventing forgotten clothes and inconvenience to the next user.
+As a hostel resident, I want to be able to cancel a previously made booking for a washing machine or dryer time slot, so that I can free up the slot for other residents and avoid unnecessary charges or penalties for unused time slots.
 
-Authentication System: A QR code authentication system ensures that only the rightful user with a reserved time slot can access and use the specific machine, ensuring fairness and proper allocation.
+As a hostel resident, I want to receive an alarm or notification when my reserved time slot is up, so that I can promptly retrieve my clothes from the washer or dryer and prevent inconvenience to the next user.
 
-Seamless Payment: With the inclusion of an in-app payment method and a digital wallet, students no longer need to scan additional QR codes for payment at the machines. The laundry fee is automatically deducted from the wallet once the laundry service is completed.
+As a hostel resident, I want to have an authentication system in the app, using QR codes, to validate my rightful usage of the machines during my reserved time slot, so that I can ensure that only authorized users can access the machines at their designated times.
+
+As a hostel resident, I want to have an in-app payment method and a digital wallet, so that I can conveniently make payments for the laundry service without the need to scan additional QR codes and have the laundry fees deducted from my wallet once the service is completed.
+
+
 
 
 
