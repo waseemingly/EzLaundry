@@ -224,15 +224,40 @@ const BookTimeslotScreen = () => {
           userEmail: auth.currentUser?.email || '',
         });
 
-        // navigation.navigate("Homebook",  {
-        //   selectedDate,
-        //   selectedTime,
-        //   selectedMachine: machine,
-        //   bookingId: bookingData.bookingId,
-        // });
 
 
-      } catch (error) {
+      } 
+
+      // try {
+      //   const userCollectionRef = collection(db, 'users');
+      //   const userEmail = auth.currentUser?.email || '';
+      //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
+  
+      //   const bookingData = {
+      //     selectedResidence: selectedResidenceName,
+      //     selectedDate,
+      //     selectedTime,
+      //     machine,
+      //     userEmail,
+      //     bookingId: '',
+      //   };
+  
+      //   const bookingDocRef = await addDoc(userCollectionRef, bookingData);
+  
+      //   bookingData.bookingId = bookingDocRef.id;
+  
+      //   await setDoc(bookingDocRef, bookingData);
+  
+      //   navigation.navigate("My Bookings", {
+      //     selectedResidence,
+      //     selectedDate,
+      //     selectedTime,
+      //     selectedMachine: machine,
+      //     bookingId: bookingData.bookingId,
+      //     userEmail: auth.currentUser?.email || '',
+      //   });
+      // }
+      catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error
       }

@@ -1,32 +1,32 @@
-import { useNavigation } from '@react-navigation/core'
-import React, { useEffect, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native'
-import { auth } from '../firebase'
-import {signInWithEmailAndPasswword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth'
+
+import { useNavigation } from '@react-navigation/core';
+import React, { useEffect, useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState('false')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const {height} = useWindowDimensions()
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     setLoading(true);
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigation.replace("Home")
+        navigation.replace("Home");
       }
-    })
-    return unsubscribe
-  }, [])
-
-
+    });
+    return unsubscribe;
+  }, []);
 
   const handleLogin = () => {
     auth
@@ -35,21 +35,27 @@ const LoginScreen = () => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
       })
-      .catch(error => alert(error.message))
-  }
-
+      .catch(error => {
+        if (error.code === 'auth/user-not-found') {
+          setErrorMessage('Email does not have an account. Please sign up.');
+        } else if (error.code === 'auth/wrong-password') {
+          setErrorMessage('Wrong password for the registered email.');
+        } else {
+          setErrorMessage(error.message);
+        }
+      });
+  };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior="padding"
     >
-
       <View style={styles.root}>
         <Image
-        source={Logo}
-        style={[styles.logo, {height: height * 0.4}]}
-        resizeMode="contain"
+          source={Logo}
+          style={[styles.logo, { height: height * 0.4 }]}
+          resizeMode="contain"
         />
       </View>
 
@@ -70,6 +76,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.buttonContainer}>
+        {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
 
         <TouchableOpacity
           onPress={handleLogin}
@@ -80,26 +87,24 @@ const LoginScreen = () => {
 
         <TouchableOpacity
           onPress={() => navigation.navigate('Register')}
-          title = 'Register Details' 
+          title='Register Details'
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Sign up </Text>
+          <Text style={styles.buttonOutlineText}>Sign up</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={()=> navigation.navigate('Forgot Password')}
+          onPress={() => navigation.navigate('Forgot Password')}
           style={[styles.button, styles.buttonforgot]}
         >
-          <Text style={styles.buttonforgotText}>Forgot Password ?</Text>
+          <Text style={styles.buttonforgotText}>Forgot Password</Text>
         </TouchableOpacity>
-
-        
       </View>
-  </KeyboardAvoidingView>
-  )
-}
+    </KeyboardAvoidingView>
+  );
+};
 
-export default LoginScreen
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     padding: 15,
-    borderRadius:20,
+    borderRadius: 20,
     borderColor: 'pink',
     alignItems: 'center',
   },
@@ -163,39 +168,12 @@ const styles = StyleSheet.create({
     color: 'pink',
     fontWeight: '700',
     fontSize: 16,
- }
-}
-)
-
-/*export default 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  inputContainer: {
-    width: '80%'
-  },
-  input: {
-    backgroundColor: 'white',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 5,
-  },
-buttonRegister: {
-  color: 'white',
-  fontWeight: '700',
-  fontSize: 16,
-},
-buttonRegisterText: {
-  color: 'pink',
-  fontWeight: '700',
-  fontSize: 16,
-}
-}
-)*/
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  }
+});
 
 

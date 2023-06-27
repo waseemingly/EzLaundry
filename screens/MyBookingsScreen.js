@@ -160,36 +160,107 @@ const styles = StyleSheet.create({
 
 export default MyBookingScreen;
 
-// const MyBookingScreen = () => {
-//   const route = useRoute();
+
+// const MyBookingsScreen = () => {
 //   const navigation = useNavigation();
-//   const userUid = auth.currentUser ? auth.currentUser.uid : null;
-//   const homepage = async () => {
-//     navigation.navigate("Home");
-//       await setDoc(
-//         doc(db, "users", `${userUid}`),
-//         {
-//         // orders: { ...cart },
-//           email: user.email,
-//           bookingDetails: route.params,
-//         },
-//       {
-//         merge: true,
+//   const route = useRoute();
+//   const { userEmail } = route.params;
+//   const [bookingDetails, setBookingDetails] = useState(null);
+
+//   useEffect(() => {
+//     const fetchBookingDetails = async () => {
+//       try {
+//         const bookingsRef = firestore.collection('bookings');
+//         const querySnapshot = await bookingsRef
+//           .where('userEmail', '==', userEmail)
+//           .orderBy('createdAt', 'desc')
+//           .limit(1)
+//           .get();
+
+//         if (querySnapshot.empty) {
+//           // Handle case when there are no bookings for the user
+//           console.log('No bookings found');
+//           setBookingDetails(null);
+//         } else {
+//           const bookingData = querySnapshot.docs[0].data();
+//           // Process bookingData as needed
+//           console.log('Booking details:', bookingData);
+//           setBookingDetails(bookingData);
+//         }
+//       } catch (error) {
+//         console.log('Error fetching booking details:', error);
 //       }
-//     );
 //     };
+
+//     fetchBookingDetails();
+//   }, [userEmail]);
+
 //   return (
-//     <View style={styles.buttonContainer}>
+//     <React.Fragment>
+//       <View style={styles.container}>
+//         <View style={styles.bookingItem}>
+//           <Text style={styles.title}>Booking Details:</Text>
+//           <Text>Booking ID: {bookingId}</Text>
+//           <Text>Selected Residence: {bookingData.selectedResidence}</Text>
+//           <Text>Selected Date: {bookingData.selectedDate && bookingData.selectedDate.toDate().toString()}</Text>
+//           <Text>Selected Time: {bookingData.selectedTime}</Text>
+//           <Text>Selected Washing Machine: {bookingData.machine}</Text>
+//           <Text>Email: {bookingData.userEmail}</Text>
+//         </View>
+//         <View style={styles.buttonContainer}>
+//           <TouchableOpacity onPress={handleCancelBooking} style={[styles.button, styles.cancelButton]}>
+//             <Text style={styles.buttonText}>Cancel Booking</Text>
+//           </TouchableOpacity>
+//           <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.keepButton]}>
+//             <Text style={styles.buttonText}>Go to Homepage</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </React.Fragment>
+//   );
+// };
 
-//               <TouchableOpacity
-//                 onPress={homepage}
-//                 style={[styles.button, styles.buttonhome]}
-//               >
-//                 <Text style={styles.buttonhomeText}>Go to Home Page</Text>
-//               </TouchableOpacity>
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 20,
+//   },
+//   bookingItem: {
+//     backgroundColor: '#f0f0f0',
+//     padding: 10,
+//     borderRadius: 5,
+//     marginBottom: 10,
+//   },
+//   title: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 10,
+//   },
+//   buttonContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 20,
+//   },
+//   button: {
+//     backgroundColor: 'white',
+//     padding: 10,
+//     borderRadius: 5,
+//     marginHorizontal: 10,
+//   },
+//   cancelButton: {
+//     borderColor: 'red',
+//     borderWidth: 1,
+//   },
+//   keepButton: {
+//     borderColor: 'green',
+//     borderWidth: 1,
+//   },
+//   buttonText: {
+//     fontWeight: 'bold',
+//     fontSize: 16,
+//   },
+// });
 
-
-//             </View>
-//   )
-// }
+// export default MyBookingsScreen;
 
