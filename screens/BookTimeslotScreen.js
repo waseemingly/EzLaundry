@@ -227,12 +227,12 @@ const BookTimeslotScreen = () => {
 
 
       } 
-
+      
       // try {
       //   const userCollectionRef = collection(db, 'users');
       //   const userEmail = auth.currentUser?.email || '';
       //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-  
+      
       //   const bookingData = {
       //     selectedResidence: selectedResidenceName,
       //     selectedDate,
@@ -241,22 +241,23 @@ const BookTimeslotScreen = () => {
       //     userEmail,
       //     bookingId: '',
       //   };
-  
-      //   const bookingDocRef = await addDoc(userCollectionRef, bookingData);
-  
+      
+      //   const bookingDocRef = await addDoc(userCollectionRef.doc(userEmail), bookingData);
+      
       //   bookingData.bookingId = bookingDocRef.id;
-  
+      
       //   await setDoc(bookingDocRef, bookingData);
-  
+      
       //   navigation.navigate("My Bookings", {
       //     selectedResidence,
       //     selectedDate,
       //     selectedTime,
       //     selectedMachine: machine,
       //     bookingId: bookingData.bookingId,
-      //     userEmail: auth.currentUser?.email || '',
+      //     userEmail,
       //   });
-      // }
+      // } 
+     
       catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error

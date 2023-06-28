@@ -97,7 +97,7 @@ const LoginScreen = () => {
           onPress={() => navigation.navigate('Forgot Password')}
           style={[styles.button, styles.buttonforgot]}
         >
-          <Text style={styles.buttonforgotText}>Forgot Password</Text>
+          <Text style={styles.buttonforgotText}>Forgot Password </Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
