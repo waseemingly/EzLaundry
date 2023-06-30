@@ -6,8 +6,9 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 //import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 import Logo1 from '../assets/register.png';
 //import { auth, firestore } from '../firebase';
-import { auth, db } from '../firebase';
+import { auth, db, createUserWithEmailAndPassword, sendEmailVerification } from '../firebase';
 import { setDoc,doc } from 'firebase/firestore';
+
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState('')
@@ -47,6 +48,37 @@ const RegisterScreen = () => {
           })
         })
     }; 
+
+    const handleRegisterPress1 = () => {
+      if (!email.endsWith('@nus.edu.sg') && !email.endsWith('@u.nus.edu')) {
+        alert('Please register with an NUS email.');
+        return;
+      }
+    
+      if (password !== confirmpassword) {
+        alert("Passwords don't match");
+        return;
+      }
+    
+      auth.
+      createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          if (email.endsWith('@nus.edu.sg') || email.endsWith('@u.nus.edu')) {
+            sendEmailVerification(auth.currentUser).then(() => {
+              console.log('Verification email sent to:', user.email);
+            });
+          }
+          const uid = auth.currentUser.uid;
+          console.log('Registered with:', user.email);
+          setDoc(doc(db, 'users', `${uid}`), {
+            email: user.email,
+          });
+        })
+        .catch(error => {
+          setErrorMessage(error.message);
+        });
+    };
 
     return ( 
         <KeyboardAvoidingView
@@ -88,7 +120,7 @@ const RegisterScreen = () => {
       <View style={styles.buttonContainer}>
   
         <TouchableOpacity
-          onPress={handleRegisterPress}
+          onPress={handleRegisterPress1}
           style={[styles.button, styles.buttonRegister]}
         >
           <Text style={styles.buttonRegisterText}>Register</Text>

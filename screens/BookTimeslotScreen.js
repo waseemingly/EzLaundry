@@ -183,7 +183,7 @@ const BookTimeslotScreen = () => {
         ],
         { cancelable: false }
       );
-    }
+    } 
     if (selectedDate && selectedTime && machine && selectedResidence) {
       navigation.navigate("My Bookings", {
         selectedResidence: selectedResidence,
@@ -194,70 +194,71 @@ const BookTimeslotScreen = () => {
       }
       )
 
-      try {
-        const userCollectionRef = collection(db, 'users');
-
-        const userEmail = auth.currentUser?.email || '';
-        const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-
-        const bookingData = {
-          selectedResidence: selectedResidenceName ,
-          selectedDate,
-          selectedTime,
-          machine,
-          userEmail,
-          bookingId: '',
-        };
-
-        const bookingDocRef = await addDoc(userCollectionRef, bookingData);
-
-        bookingData.bookingId = bookingDocRef.id;
-
-        await setDoc(bookingDocRef, bookingData);
-
-        navigation.navigate("My Bookings", {
-          selectedResidence,
-          selectedDate,
-          selectedTime,
-          selectedMachine: machine,
-          bookingId: bookingData.bookingId,
-          userEmail: auth.currentUser?.email || '',
-        });
 
 
-
-      } 
-      
       // try {
       //   const userCollectionRef = collection(db, 'users');
+
       //   const userEmail = auth.currentUser?.email || '';
       //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-      
+
       //   const bookingData = {
-      //     selectedResidence: selectedResidenceName,
+      //     selectedResidence: selectedResidenceName ,
       //     selectedDate,
       //     selectedTime,
       //     machine,
       //     userEmail,
       //     bookingId: '',
       //   };
-      
-      //   const bookingDocRef = await addDoc(userCollectionRef.doc(userEmail), bookingData);
-      
+
+      //   const bookingDocRef = await addDoc(userCollectionRef, bookingData);
+
       //   bookingData.bookingId = bookingDocRef.id;
-      
+
       //   await setDoc(bookingDocRef, bookingData);
-      
+
       //   navigation.navigate("My Bookings", {
       //     selectedResidence,
       //     selectedDate,
       //     selectedTime,
       //     selectedMachine: machine,
       //     bookingId: bookingData.bookingId,
-      //     userEmail,
+      //     userEmail: auth.currentUser?.email || '',
       //   });
+
+
+
       // } 
-     
+      
+      try {
+        const userEmail = auth.currentUser?.email || '';
+        const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
+      
+        const bookingData = {
+          selectedResidence: selectedResidenceName,
+          selectedDate,
+          selectedTime,
+          machine,
+          bookingId: '', // Placeholder for the booking ID
+        };
+      
+        const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
+      
+        const bookingDocRef = await addDoc(userBookingsRef, bookingData);
+        
+        // Update the booking document with the generated ID
+        await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
+      
+        navigation.navigate('My Bookings', {
+          selectedResidence,
+          selectedDate,
+          selectedTime,
+          selectedMachine: machine,
+          bookingId: bookingDocRef.id,
+          userEmail: auth.currentUser?.email || '',
+        });
+      } 
+      
       catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error
@@ -301,9 +302,13 @@ const BookTimeslotScreen = () => {
 
       <HorizontalDatepicker
         mode="gregorian"
-        startDate={new Date('2023-06-26')}
-        endDate={new Date('2023-07-05')}
-        initialSelectedDate={new Date('2020-08-22')}
+        startDate={new Date()}
+        endDate={(function() {
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + 7);
+          return endDate;
+        })()}
+        initialSelectedDate={null}
         onSelectedDateChange={(date) => setSelectedDate(date)}
         selectedItemWidth={170}
         unselectedItemWidth={38}
@@ -408,22 +413,7 @@ const BookTimeslotScreen = () => {
           width: "60%"
         }}
       >
-        {/* <View>
-          <Text style={{ fontSize: 17, fontWeight: "600", color: "white" }}>
-          </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "700",
-              color: "white",
-              marginVertical: 7,
-              marginHorizontal: 60
-            }}
-          >
-            Confirm Booking 
-          </Text>
-        </View> 
-        */}
+
 
         <Pressable onPress={proceedToConfirm}>
           <Text style={{

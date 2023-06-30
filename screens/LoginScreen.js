@@ -3,10 +3,11 @@ import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import Logo from '../assets/Ezlaundry-icon.png';
 import Logo1 from '../assets/booking.png';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { signInWithEmailAndPassword, onAuthStateChanged } from '../firebase';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -46,6 +47,32 @@ const LoginScreen = () => {
       });
   };
 
+  const handleLogin1= () => {
+    if (!email.endsWith('@nus.edu.sg') && !email.endsWith('@u.nus.edu')) {
+      setErrorMessage('Please log in with an NUS email.');
+      return;
+    }
+  
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        if (!user.emailVerified) {
+          setErrorMessage('Please verify your email before logging in.');
+          return;
+        }
+        console.log('Logged in with:', user.email);
+      })
+      .catch(error => {
+        if (error.code === 'auth/user-not-found') {
+          setErrorMessage('Email does not have an account. Please sign up.');
+        } else if (error.code === 'auth/wrong-password') {
+          setErrorMessage('Wrong password for the registered email.');
+        } else {
+          setErrorMessage(error.message);
+        }
+      });
+  };
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -79,7 +106,7 @@ const LoginScreen = () => {
         {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
 
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={handleLogin1}
           style={[styles.button, styles.buttonlogin]}
         >
           <Text style={styles.buttonText}>Login</Text>
