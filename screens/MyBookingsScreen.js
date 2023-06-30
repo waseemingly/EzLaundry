@@ -194,13 +194,27 @@ const MyBookingsScreen = ({ navigation }) => {
 
   const handleCancelBooking = async (bookingId) => {
     try {
-      const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
-      await deleteDoc(bookingDocRef);
-
-      // Handle the cancellation success, e.g., show a confirmation message
-      console.log('Booking cancelled successfully');
-      Alert.alert('Booking Canceled', 'Your booking has been canceled successfully.');
-      setCancelStatus(!cancelStatus); // Toggle the cancelStatus to trigger a refresh
+      const confirmation = await new Promise((resolve) => {
+        Alert.alert(
+          'Confirm Cancellation',
+          'Are you sure you want to cancel this booking?',
+          [
+            { text: 'No, keep booking', style: 'cancel', onPress: () => resolve(false) },
+            { text: 'Yes, cancel', onPress: () => resolve(true) },
+          ],
+          { cancelable: false }
+        );
+      });
+  
+      if (confirmation) {
+        const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
+        await deleteDoc(bookingDocRef);
+  
+        // Handle the cancellation success, e.g., show a confirmation message
+        console.log('Booking cancelled successfully');
+        Alert.alert('Booking Canceled', 'Your booking has been canceled successfully.');
+        setCancelStatus(!cancelStatus); // Toggle the cancelStatus to trigger a refresh
+      }
     } catch (error) {
       console.error('Error canceling booking:', error);
       // Handle the cancellation error
@@ -210,7 +224,12 @@ const MyBookingsScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {bookings.length === 0 ? (
-        <Text style={styles.noBookingsText}>You have no bookings.</Text>
+        <>
+          <Text style={styles.noBookingsText}>You have no bookings.</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+            <Text style={styles.buttonText}>Go to Homepage</Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <>
           {bookings.map(booking => (
@@ -222,7 +241,6 @@ const MyBookingsScreen = ({ navigation }) => {
               <Text>Selected Time: {booking.selectedTime}</Text>
               <Text>Selected Washing Machine: {booking.machine}</Text>
               
-
               <TouchableOpacity
                 onPress={() => handleCancelBooking(booking.id)}
                 style={[styles.button, styles.cancelButton]}
@@ -231,7 +249,7 @@ const MyBookingsScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           ))}
-
+  
           <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
             <Text style={styles.buttonText}>Go to Homepage</Text>
           </TouchableOpacity>
