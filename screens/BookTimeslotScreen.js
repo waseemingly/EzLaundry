@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { Picker } from '@react-native-picker/picker';
-import { collection, addDoc, getDocs, updateDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, setDoc, query, where, getDoc} from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Assuming you have already initialized Firebase and obtained the Firestore instance
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
@@ -168,6 +168,69 @@ const BookTimeslotScreen = () => {
   ];
 
   const navigation = useNavigation();
+  // const proceedToConfirm = async () => {
+  //   if (!selectedDate || !selectedTime || !machine || !selectedResidence) {
+  //     Alert.alert(
+  //       "Invalid Booking",
+  //       "Please select all the fields",
+  //       [
+  //         {
+  //           text: "Cancel",
+  //           onPress: () => console.log("Cancel Pressed"),
+  //           style: "cancel"
+  //         },
+  //         { text: "OK", onPress: () => console.log("OK Pressed") }
+  //       ],
+  //       { cancelable: false }
+  //     );
+  //   } 
+  //   if (selectedDate && selectedTime && machine && selectedResidence) {
+  //     navigation.navigate("My Bookings", {
+  //       selectedResidence: selectedResidence,
+  //       selectedDate: selectedDate,
+  //       selectedTime: selectedTime,
+  //       selectedMachine: machine,
+  //       email: auth.currentUser?.email || '',
+  //     }
+  //     )
+
+      
+  //     try {
+  //       const userEmail = auth.currentUser?.email || '';
+  //       const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
+      
+  //       const bookingData = {
+  //         selectedResidence: selectedResidenceName,
+  //         selectedDate,
+  //         selectedTime,
+  //         machine,
+  //         bookingId: '', // Placeholder for the booking ID
+  //       };
+      
+  //       const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
+      
+  //       const bookingDocRef = await addDoc(userBookingsRef, bookingData);
+        
+  //       // Update the booking document with the generated ID
+  //       await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
+      
+  //       navigation.navigate('My Bookings', {
+  //         selectedResidence,
+  //         selectedDate,
+  //         selectedTime,
+  //         selectedMachine: machine,
+  //         bookingId: bookingDocRef.id,
+  //         userEmail: auth.currentUser?.email || '',
+  //       });
+  //     } 
+      
+  //     catch (error) {
+  //       console.error('Error storing booking data:', error);
+  //       // Handle the error
+  //     }
+  //   }
+  // }
+
   const proceedToConfirm = async () => {
     if (!selectedDate || !selectedTime || !machine || !selectedResidence) {
       Alert.alert(
@@ -183,57 +246,11 @@ const BookTimeslotScreen = () => {
         ],
         { cancelable: false }
       );
-    } 
-    if (selectedDate && selectedTime && machine && selectedResidence) {
-      navigation.navigate("My Bookings", {
-        selectedResidence: selectedResidence,
-        selectedDate: selectedDate,
-        selectedTime: selectedTime,
-        selectedMachine: machine,
-        email: auth.currentUser?.email || '',
-      }
-      )
-
-
-
-      // try {
-      //   const userCollectionRef = collection(db, 'users');
-
-      //   const userEmail = auth.currentUser?.email || '';
-      //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-
-      //   const bookingData = {
-      //     selectedResidence: selectedResidenceName ,
-      //     selectedDate,
-      //     selectedTime,
-      //     machine,
-      //     userEmail,
-      //     bookingId: '',
-      //   };
-
-      //   const bookingDocRef = await addDoc(userCollectionRef, bookingData);
-
-      //   bookingData.bookingId = bookingDocRef.id;
-
-      //   await setDoc(bookingDocRef, bookingData);
-
-      //   navigation.navigate("My Bookings", {
-      //     selectedResidence,
-      //     selectedDate,
-      //     selectedTime,
-      //     selectedMachine: machine,
-      //     bookingId: bookingData.bookingId,
-      //     userEmail: auth.currentUser?.email || '',
-      //   });
-
-
-
-      // } 
-      
+    } else {
       try {
         const userEmail = auth.currentUser?.email || '';
         const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-      
+  
         const bookingData = {
           selectedResidence: selectedResidenceName,
           selectedDate,
@@ -241,33 +258,75 @@ const BookTimeslotScreen = () => {
           machine,
           bookingId: '', // Placeholder for the booking ID
         };
-      
-        const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
-      
-        const bookingDocRef = await addDoc(userBookingsRef, bookingData);
-        
-        // Update the booking document with the generated ID
-        await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-      
-        navigation.navigate('My Bookings', {
-          selectedResidence,
-          selectedDate,
-          selectedTime,
-          selectedMachine: machine,
-          bookingId: bookingDocRef.id,
-          userEmail: auth.currentUser?.email || '',
-        });
-      } 
-      
-      catch (error) {
-        console.error('Error storing booking data:', error);
-        // Handle the error
+       
+      const usersCollectionRef = collection(db, 'users');
+      const usersSnapshot = await getDocs(usersCollectionRef);
+
+      let bookingExists = false;
+
+      for (const userDoc of usersSnapshot.docs) {
+        const bookingsCollectionRef = collection(userDoc.ref, 'bookings');
+        const bookingsQuery = query(bookingsCollectionRef,
+          where('selectedResidence', '==', selectedResidenceName),
+          where('selectedDate', '==', selectedDate),
+          where('selectedTime', '==', selectedTime),
+          where('machine', '==', machine)
+        );
+
+        const bookingsSnapshot = await getDocs(bookingsQuery);
+
+        if (!bookingsSnapshot.empty) {
+          bookingExists = true;
+          break;
+        }
       }
+
+      if (bookingExists) {
+        Alert.alert(
+          'Booking Already Exists',
+          'The selected booking slot is already taken. Please choose a different one.'
+        );
+      } else {
+        const currentUserBookingsRef = collection(db, 'users', userEmail, 'bookings');
+        const currentUserBookingsQuery = query(currentUserBookingsRef,
+          where('selectedResidence', '==', selectedResidenceName),
+          where('selectedDate', '==', selectedDate),
+          where('selectedTime', '==', selectedTime),
+          where('machine', '==', machine)
+        );
+
+        const currentUserBookingsSnapshot = await getDocs(currentUserBookingsQuery);
+
+        if (!currentUserBookingsSnapshot.empty) {
+          bookingExists = true;
+        }
+
+        if (bookingExists) {
+          Alert.alert(
+            'Booking Already Exists',
+            'You have already booked the selected slot. Please choose a different one.'
+          );
+        } else {
+          const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
+          const bookingDocRef = await addDoc(userBookingsRef, bookingData);
+          await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
+
+          navigation.navigate('My Bookings', {
+            selectedResidence,
+            selectedDate,
+            selectedTime,
+            selectedMachine: machine,
+            bookingId: bookingDocRef.id,
+            userEmail: auth.currentUser?.email || '',
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error storing booking data:', error);
+      // Handle the error
     }
   }
-
-
-
+};
   return (
     <SafeAreaView>
       <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
