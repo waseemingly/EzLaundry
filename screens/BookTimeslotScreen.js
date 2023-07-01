@@ -250,83 +250,51 @@ const BookTimeslotScreen = () => {
       try {
         const userEmail = auth.currentUser?.email || '';
         const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-  
+      
         const bookingData = {
           selectedResidence: selectedResidenceName,
           selectedDate,
           selectedTime,
           machine,
           bookingId: '', // Placeholder for the booking ID
+          userEmail,
         };
-       
-      const usersCollectionRef = collection(db, 'users');
-      const usersSnapshot = await getDocs(usersCollectionRef);
-
-      let bookingExists = false;
-
-      for (const userDoc of usersSnapshot.docs) {
-        const bookingsCollectionRef = collection(userDoc.ref, 'bookings');
-        const bookingsQuery = query(bookingsCollectionRef,
+      
+        // Check if the selected timeslot is already booked
+        const bookingsCollectionRef = collection(db, 'bookings');
+        const existingBookingQuery = query(bookingsCollectionRef,
           where('selectedResidence', '==', selectedResidenceName),
           where('selectedDate', '==', selectedDate),
           where('selectedTime', '==', selectedTime),
           where('machine', '==', machine)
         );
-
-        const bookingsSnapshot = await getDocs(bookingsQuery);
-
-        if (!bookingsSnapshot.empty) {
-          bookingExists = true;
-          break;
-        }
-      }
-
-      if (bookingExists) {
-        Alert.alert(
-          'Booking Already Exists',
-          'The selected booking slot is already taken. Please choose a different one.'
-        );
-      } else {
-        const currentUserBookingsRef = collection(db, 'users', userEmail, 'bookings');
-        const currentUserBookingsQuery = query(currentUserBookingsRef,
-          where('selectedResidence', '==', selectedResidenceName),
-          where('selectedDate', '==', selectedDate),
-          where('selectedTime', '==', selectedTime),
-          where('machine', '==', machine)
-        );
-
-        const currentUserBookingsSnapshot = await getDocs(currentUserBookingsQuery);
-
-        if (!currentUserBookingsSnapshot.empty) {
-          bookingExists = true;
-        }
-
-        if (bookingExists) {
+        const existingBookingSnapshot = await getDocs(existingBookingQuery);
+      
+        if (!existingBookingSnapshot.empty) {
           Alert.alert(
             'Booking Already Exists',
-            'You have already booked the selected slot. Please choose a different one.'
+            'The selected booking slot is already taken. Please choose a different one.'
           );
-        } else {
-          const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
-          const bookingDocRef = await addDoc(userBookingsRef, bookingData);
-          await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-
-          navigation.navigate('My Bookings', {
-            selectedResidence,
-            selectedDate,
-            selectedTime,
-            selectedMachine: machine,
-            bookingId: bookingDocRef.id,
-            userEmail: auth.currentUser?.email || '',
-          });
+          return;
         }
-      }
-    } catch (error) {
-      console.error('Error storing booking data:', error);
-      // Handle the error
+      
+        const bookingDocRef = await addDoc(bookingsCollectionRef, bookingData);
+        await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
+      
+        navigation.navigate('My Bookings', {
+          selectedResidence,
+          selectedDate,
+          selectedTime,
+          selectedMachine: machine,
+          bookingId: bookingDocRef.id,
+          userEmail,
+        });
+      } catch (error) {
+        console.error('Error storing booking data:', error);
+        // Handle the error
+      }           
     }
-  }
-};
+  };
   return (
     <SafeAreaView>
       <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>

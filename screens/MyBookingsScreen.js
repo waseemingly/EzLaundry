@@ -180,7 +180,7 @@ const MyBookingsScreen = ({ navigation }) => {
     } [navigation]
     const fetchBookings = async () => {
       try {
-        const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
+        const userBookingsRef = collection(db, 'bookings');
         const bookingsSnapshot = await getDocs(userBookingsRef);
         const bookingsData = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setBookings(bookingsData);
@@ -207,7 +207,7 @@ const MyBookingsScreen = ({ navigation }) => {
       });
   
       if (confirmation) {
-        const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
+        const bookingDocRef = doc(db, 'bookings', bookingId);
         await deleteDoc(bookingDocRef);
   
         // Handle the cancellation success, e.g., show a confirmation message
