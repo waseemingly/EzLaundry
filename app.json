@@ -4,10 +4,10 @@
     "slug": "EzLaundry",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/booking.png",
+    "icon": "./assets/Ezlaundry-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/booking.png",
+      "image": "./assets/Ezlaundry-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

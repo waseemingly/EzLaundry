@@ -231,6 +231,17 @@ const BookTimeslotScreen = () => {
   //   }
   // }
 
+   // Get the current hour and minute
+   const currentDate = new Date();
+  const currentHour = currentDate.getHours();
+  const currentMinute = currentDate.getMinutes();
+
+  // Find the index of the next available time slot
+  let startIndex = currentHour + 1; // Subtract 1 since array indices start from 0
+
+  // Create a new array with the updated order of times
+  const updatedTimes = [...times.slice(startIndex), ...times.slice(0, startIndex)];
+
   const proceedToConfirm = async () => {
     if (!selectedDate || !selectedTime || !machine || !selectedResidence) {
       Alert.alert(
@@ -359,7 +370,7 @@ const BookTimeslotScreen = () => {
         {route.params && route.params.selectedTime}
       </Text>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {times.map((item, index) => (
           <Pressable
             key={index}
@@ -385,7 +396,35 @@ const BookTimeslotScreen = () => {
             <Text>{item.time}</Text>
           </Pressable>
         ))}
-      </ScrollView>
+      </ScrollView> */}
+
+<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      {updatedTimes.map((item, index) => (
+        <Pressable
+          key={index}
+          onPress={() => setSelectedTime(item.time)}
+          style={
+            selectedTime.includes(item.time)
+              ? {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "red",
+                  borderWidth: 0.7,
+                }
+              : {
+                  margin: 10,
+                  borderRadius: 7,
+                  padding: 15,
+                  borderColor: "gray",
+                  borderWidth: 0.7,
+                }
+          }
+        >
+          <Text>{item.time}</Text>
+        </Pressable>
+      ))}
+    </ScrollView>
       <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
         Select Washing Machine
       </Text>
