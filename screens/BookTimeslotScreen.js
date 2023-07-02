@@ -237,7 +237,7 @@ const BookTimeslotScreen = () => {
   const currentMinute = currentDate.getMinutes();
 
   // Find the index of the next available time slot
-  let startIndex = currentHour + 1; // Subtract 1 since array indices start from 0
+  let startIndex = currentHour ; // Subtract 1 since array indices start from 0
 
   // Create a new array with the updated order of times
   const updatedTimes = [...times.slice(startIndex), ...times.slice(0, startIndex)];

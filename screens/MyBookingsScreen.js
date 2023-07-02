@@ -184,6 +184,11 @@ const MyBookingsScreen = ({ navigation }) => {
         const bookingsSnapshot = await getDocs(userBookingsRef);
         const bookingsData = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setBookings(bookingsData);
+
+        bookingsData.forEach(booking => {
+          deleteExpiredBooking(booking.id);
+        });
+
       } catch (error) {
         console.error('Error fetching bookings:', error);
       }
@@ -208,10 +213,28 @@ const MyBookingsScreen = ({ navigation }) => {
   
       if (confirmation) {
         const bookingDocRef = doc(db, 'bookings', bookingId);
-        await deleteDoc(bookingDocRef);
+        const bookingSnapshot = await getDoc(bookingDocRef);
+        const bookingData = bookingSnapshot.data();
+  
+        if (bookingData) {
+          const bookedTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
+          const currentTime = new Date();
+  
+          if (currentTime > bookedTime) {
+            // Delete the booking document from Firestore if the booked time has already passed
+            await deleteDoc(bookingDocRef);
+            console.log('Booking deleted successfully');
+          } else {
+            // Schedule a timer to delete the booking document after the booked time has passed
+            const timeDifference = bookedTime.getTime() - currentTime.getTime();
+            setTimeout(async () => {
+              await deleteDoc(bookingDocRef);
+              console.log('Booking deleted successfully');
+            }, timeDifference);
+          }
+        }
   
         // Handle the cancellation success, e.g., show a confirmation message
-        console.log('Booking cancelled successfully');
         Alert.alert('Booking Canceled', 'Your booking has been canceled successfully.');
         setCancelStatus(!cancelStatus); // Toggle the cancelStatus to trigger a refresh
       }
@@ -221,6 +244,38 @@ const MyBookingsScreen = ({ navigation }) => {
       Alert.alert('Error', 'Failed to cancel the booking. Please try again.');
     }
   };
+
+  
+  const deleteExpiredBooking = async (bookingId) => {
+    try {
+      const bookingDocRef = doc(db, 'bookings', bookingId);
+      const bookingSnapshot = await getDoc(bookingDocRef);
+      const bookingData = bookingSnapshot.data();
+  
+      if (bookingData) {
+        const bookedTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
+        const currentTime = new Date();
+  
+        if (currentTime > bookedTime) {
+          // Delete the booking document from Firestore if the booked time has already passed
+          await deleteDoc(bookingDocRef);
+          console.log('Booking deleted successfully');
+        } else {
+          // Schedule a timer to delete the booking document after the booked time has passed
+          const timeDifference = bookedTime.getTime() - currentTime.getTime();
+          setTimeout(async () => {
+            await deleteDoc(bookingDocRef);
+            console.log('Booking deleted successfully');
+          }, timeDifference);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting expired booking:', error);
+    }
+  };
+  
+
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {bookings.length === 0 ? (
