@@ -45,44 +45,44 @@ import { auth, db } from '../firebase';
 
 //   //Cancel Booking
 
-//   const handleCancelBooking = async () => {
-//     try {
-//       const bookingDocRef = doc(db, 'users', bookingId);
-//       await deleteDoc(bookingDocRef);
+  // const handleCancelBooking = async () => {
+  //   try {
+  //     const bookingDocRef = doc(db, 'users', bookingId);
+  //     await deleteDoc(bookingDocRef);
 
-//       // Handle the cancellation success, e.g., show a confirmation message
-//       console.log('Booking cancelled successfully');
-//     } catch (error) {
-//       console.error('Error canceling booking:', error);
-//       // Handle the cancellation error
-//     }
+  //     // Handle the cancellation success, e.g., show a confirmation message
+  //     console.log('Booking cancelled successfully');
+  //   } catch (error) {
+  //     console.error('Error canceling booking:', error);
+  //     // Handle the cancellation error
+  //   }
     
 
-//     Alert.alert(
-//       "Booking Canceled",
-//       "Your booking has been canceled successfully.",
-//       [
-//         {
-//           text: "OK",
-//           onPress: () => {
-//             // Redirect to the homepage
-//             navigation.navigate("Home");
-//           },
-//         },
-//       ],
-//       { cancelable: false }
-//     );
+  //   Alert.alert(
+  //     "Booking Canceled",
+  //     "Your booking has been canceled successfully.",
+  //     [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           // Redirect to the homepage
+  //           navigation.navigate("Home");
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
 
 
-//   };
+  // };
 
-//   if (!bookingData) {
-//     return (
-//       <View style={styles.noBookingsContainer}>
-//         <Text style={styles.noBookingsText}>You have no bookings.</Text>
-//       </View>
-//     );
-//   }
+  // if (!bookingData) {
+  //   return (
+  //     <View style={styles.noBookingsContainer}>
+  //       <Text style={styles.noBookingsText}>You have no bookings.</Text>
+  //     </View>
+  //   );
+  // }
 
  
 //   return (
@@ -171,6 +171,47 @@ const MyBookingsScreen = ({ navigation }) => {
   const [bookings, setBookings] = useState([]);
   const userEmail = auth.currentUser?.email || '';
   const [cancelStatus, setCancelStatus] = useState(false); // Track the cancellation status
+  
+
+  // const deleteExpiredBooking = async (bookingId) => {
+  //   try {
+  //     const bookingDocRef = doc(db, 'bookings', bookingId);
+  //     const bookingSnapshot = await getDoc(bookingDocRef);
+  //     const bookingData = bookingSnapshot.data();
+  
+  //     if (bookingData) {
+  //       const bookedDateTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
+  //       const currentTime = new Date();
+  
+  //       const bookedDate = bookedDateTime.toDateString();
+  //       const currentDate = currentTime.toDateString();
+  
+  //       const bookedTime = bookedDateTime.getHours() * 60 + bookedDateTime.getMinutes();
+  //       const currentTimeMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+  
+  //       const oneHourInMinutes = 60;
+  
+  //       if (currentDate === bookedDate && currentTimeMinutes > bookedTime + oneHourInMinutes) {
+  //         // Delete the booking document from Firestore if the current time has passed one hour after the booked time
+  //         await deleteDoc(bookingDocRef);
+  //         console.log('Booking deleted successfully');
+  //       } else if (currentTime > bookedDateTime) {
+  //         // Delete the booking document from Firestore if the current time is later than the booked time on a different date
+  //         await deleteDoc(bookingDocRef);
+  //         console.log('Booking deleted successfully');
+  //       } else {
+  //         // Schedule a timer to delete the booking document after the booked time has passed
+  //         const timeDifference = bookedDateTime.getTime() - currentTime.getTime();
+  //         setTimeout(async () => {
+  //           await deleteDoc(bookingDocRef);
+  //           console.log('Booking deleted successfully');
+  //         }, timeDifference);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting expired booking:', error);
+  //   }
+  // };
 
   useEffect(() => {
     {
@@ -180,14 +221,14 @@ const MyBookingsScreen = ({ navigation }) => {
     } [navigation]
     const fetchBookings = async () => {
       try {
-        const userBookingsRef = collection(db, 'bookings');
+        const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
         const bookingsSnapshot = await getDocs(userBookingsRef);
         const bookingsData = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setBookings(bookingsData);
 
-        bookingsData.forEach(booking => {
-          deleteExpiredBooking(booking.id);
-        });
+        // bookingsData.forEach(booking => {
+        //   deleteExpiredBooking(booking.id);
+        // });
 
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -196,6 +237,7 @@ const MyBookingsScreen = ({ navigation }) => {
 
     fetchBookings();
   }, [cancelStatus]); // Include cancelStatus as a dependency
+
 
   const handleCancelBooking = async (bookingId) => {
     try {
@@ -212,7 +254,7 @@ const MyBookingsScreen = ({ navigation }) => {
       });
   
       if (confirmation) {
-        const bookingDocRef = doc(db, 'bookings', bookingId);
+        const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
         const bookingSnapshot = await getDoc(bookingDocRef);
         const bookingData = bookingSnapshot.data();
   
@@ -238,43 +280,43 @@ const MyBookingsScreen = ({ navigation }) => {
         Alert.alert('Booking Canceled', 'Your booking has been canceled successfully.');
         setCancelStatus(!cancelStatus); // Toggle the cancelStatus to trigger a refresh
       }
+
     } catch (error) {
       console.error('Error canceling booking:', error);
       // Handle the cancellation error
       Alert.alert('Error', 'Failed to cancel the booking. Please try again.');
     }
   };
-
+    // const handleCancelBooking = async () => {
+    //   try {
+    //     const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
+    //     await deleteDoc(bookingDocRef);
   
-  const deleteExpiredBooking = async (bookingId) => {
-    try {
-      const bookingDocRef = doc(db, 'bookings', bookingId);
-      const bookingSnapshot = await getDoc(bookingDocRef);
-      const bookingData = bookingSnapshot.data();
+    //     // Handle the cancellation success, e.g., show a confirmation message
+    //     console.log('Booking cancelled successfully');
+    //   } catch (error) {
+    //     console.error('Error canceling booking:', error);
+    //     // Handle the cancellation error
+    //   }
+      
   
-      if (bookingData) {
-        const bookedTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
-        const currentTime = new Date();
+    //   Alert.alert(
+    //     "Booking Canceled",
+    //     "Your booking has been canceled successfully.",
+    //     [
+    //       {
+    //         text: "OK",
+    //         onPress: () => {
+    //           // Redirect to the homepage
+    //           navigation.navigate("Home");
+    //         },
+    //       },
+    //     ],
+    //     { cancelable: false }
+    //   );
   
-        if (currentTime > bookedTime) {
-          // Delete the booking document from Firestore if the booked time has already passed
-          await deleteDoc(bookingDocRef);
-          console.log('Booking deleted successfully');
-        } else {
-          // Schedule a timer to delete the booking document after the booked time has passed
-          const timeDifference = bookedTime.getTime() - currentTime.getTime();
-          setTimeout(async () => {
-            await deleteDoc(bookingDocRef);
-            console.log('Booking deleted successfully');
-          }, timeDifference);
-        }
-      }
-    } catch (error) {
-      console.error('Error deleting expired booking:', error);
-    }
-  };
   
-
+    // };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

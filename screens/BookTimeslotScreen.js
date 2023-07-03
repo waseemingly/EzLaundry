@@ -272,7 +272,7 @@ const BookTimeslotScreen = () => {
         };
       
         // Check if the selected timeslot is already booked
-        const bookingsCollectionRef = collection(db, 'bookings');
+        const bookingsCollectionRef = collection(db, 'users', userEmail, 'bookings');
         const existingBookingQuery = query(bookingsCollectionRef,
           where('selectedResidence', '==', selectedResidenceName),
           where('selectedDate', '==', selectedDate),
