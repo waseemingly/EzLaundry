@@ -173,72 +173,76 @@ const MyBookingsScreen = ({ navigation }) => {
   const [cancelStatus, setCancelStatus] = useState(false); // Track the cancellation status
   
 
-  // const deleteExpiredBooking = async (bookingId) => {
-  //   try {
-  //     const bookingDocRef = doc(db, 'bookings', bookingId);
-  //     const bookingSnapshot = await getDoc(bookingDocRef);
-  //     const bookingData = bookingSnapshot.data();
+  const deleteExpiredBooking = async (bookingId) => {
+    try {
+      const bookingDocRef = doc(db, 'bookings', bookingId);
+      const bookingSnapshot = await getDoc(bookingDocRef);
+      const bookingData = bookingSnapshot.data();
   
-  //     if (bookingData) {
-  //       const bookedDateTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
-  //       const currentTime = new Date();
+      if (bookingData) {
+        const bookedDateTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
+        const currentTime = new Date();
   
-  //       const bookedDate = bookedDateTime.toDateString();
-  //       const currentDate = currentTime.toDateString();
+        const bookedDate = bookedDateTime.toDateString();
+        const currentDate = currentTime.toDateString();
   
-  //       const bookedTime = bookedDateTime.getHours() * 60 + bookedDateTime.getMinutes();
-  //       const currentTimeMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+        const bookedTime = bookedDateTime.getHours() * 60 + bookedDateTime.getMinutes();
+        const currentTimeMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
   
-  //       const oneHourInMinutes = 60;
+        const sixtyFiveMinutesInMinutes = 65;
   
-  //       if (currentDate === bookedDate && currentTimeMinutes > bookedTime + oneHourInMinutes) {
-  //         // Delete the booking document from Firestore if the current time has passed one hour after the booked time
-  //         await deleteDoc(bookingDocRef);
-  //         console.log('Booking deleted successfully');
-  //       } else if (currentTime > bookedDateTime) {
-  //         // Delete the booking document from Firestore if the current time is later than the booked time on a different date
-  //         await deleteDoc(bookingDocRef);
-  //         console.log('Booking deleted successfully');
-  //       } else {
-  //         // Schedule a timer to delete the booking document after the booked time has passed
-  //         const timeDifference = bookedDateTime.getTime() - currentTime.getTime();
-  //         setTimeout(async () => {
-  //           await deleteDoc(bookingDocRef);
-  //           console.log('Booking deleted successfully');
-  //         }, timeDifference);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting expired booking:', error);
-  //   }
-  // };
-
+        if (currentDate === bookedDate && currentTimeMinutes > bookedTime + sixtyFiveMinutesInMinutes) {
+          // Delete the booking document from Firestore if the current time has passed 65 minutes after the booked time
+          await deleteDoc(bookingDocRef);
+          console.log('Booking deleted successfully');
+        } else if (currentTime > bookedDateTime) {
+          // Delete the booking document from Firestore if the current time is later than the booked time on a different date
+          await deleteDoc(bookingDocRef);
+          console.log('Booking deleted successfully');
+        } else {
+          // Schedule a timer to delete the booking document after the booked time has passed
+          const timeDifference = bookedDateTime.getTime() - currentTime.getTime();
+          setTimeout(async () => {
+            await deleteDoc(bookingDocRef);
+            console.log('Booking deleted successfully');
+          }, timeDifference);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting expired booking:', error);
+    }
+  };
+    
   useEffect(() => {
-    {
-      navigation.setOptions({
-        headerShown: false, // Remove the back button
-      });
-    } [navigation]
+    navigation.setOptions({
+      headerShown: false, // Remove the back button
+    });
+  
     const fetchBookings = async () => {
       try {
-        const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
-        const bookingsSnapshot = await getDocs(userBookingsRef);
+        const user = auth.currentUser;
+        if (!user) {
+          // User not logged in, handle accordingly
+          return;
+        }
+        
+        const userBookingsQuery = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+        const bookingsSnapshot = await getDocs(userBookingsQuery);
         const bookingsData = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setBookings(bookingsData);
-
+  
         // bookingsData.forEach(booking => {
         //   deleteExpiredBooking(booking.id);
         // });
-
+  
       } catch (error) {
         console.error('Error fetching bookings:', error);
       }
     };
-
+  
     fetchBookings();
   }, [cancelStatus]); // Include cancelStatus as a dependency
-
-
+  
   const handleCancelBooking = async (bookingId) => {
     try {
       const confirmation = await new Promise((resolve) => {
@@ -254,7 +258,7 @@ const MyBookingsScreen = ({ navigation }) => {
       });
   
       if (confirmation) {
-        const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
+        const bookingDocRef = doc(db, 'bookings', bookingId);
         const bookingSnapshot = await getDoc(bookingDocRef);
         const bookingData = bookingSnapshot.data();
   

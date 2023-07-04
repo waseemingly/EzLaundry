@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { Picker } from '@react-native-picker/picker';
-import { collection, addDoc, getDocs, updateDoc, doc, setDoc, query, where, getDoc} from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, setDoc, query, where, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Assuming you have already initialized Firebase and obtained the Firestore instance
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
@@ -194,11 +194,11 @@ const BookTimeslotScreen = () => {
   //     }
   //     )
 
-      
+
   //     try {
   //       const userEmail = auth.currentUser?.email || '';
   //       const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-      
+
   //       const bookingData = {
   //         selectedResidence: selectedResidenceName,
   //         selectedDate,
@@ -206,14 +206,14 @@ const BookTimeslotScreen = () => {
   //         machine,
   //         bookingId: '', // Placeholder for the booking ID
   //       };
-      
+
   //       const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
-      
+
   //       const bookingDocRef = await addDoc(userBookingsRef, bookingData);
-        
+
   //       // Update the booking document with the generated ID
   //       await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-      
+
   //       navigation.navigate('My Bookings', {
   //         selectedResidence,
   //         selectedDate,
@@ -223,7 +223,7 @@ const BookTimeslotScreen = () => {
   //         userEmail: auth.currentUser?.email || '',
   //       });
   //     } 
-      
+
   //     catch (error) {
   //       console.error('Error storing booking data:', error);
   //       // Handle the error
@@ -231,13 +231,13 @@ const BookTimeslotScreen = () => {
   //   }
   // }
 
-   // Get the current hour and minute
-   const currentDate = new Date();
+  // Get the current hour and minute
+  const currentDate = new Date();
   const currentHour = currentDate.getHours();
   const currentMinute = currentDate.getMinutes();
 
   // Find the index of the next available time slot
-  let startIndex = currentHour ; // Subtract 1 since array indices start from 0
+  let startIndex = currentHour + 1; // Subtract 1 since array indices start from 0
 
   // Create a new array with the updated order of times
   const updatedTimes = [...times.slice(startIndex), ...times.slice(0, startIndex)];
@@ -259,7 +259,6 @@ const BookTimeslotScreen = () => {
       );
     } else {
       try {
-        const userEmail = auth.currentUser?.email || '';
         const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
       
         const bookingData = {
@@ -268,12 +267,12 @@ const BookTimeslotScreen = () => {
           selectedTime,
           machine,
           bookingId: '', // Placeholder for the booking ID
-          userEmail,
+          userId: auth.currentUser?.uid || '' ,// Add the user ID to the booking data
+          userEmail: auth.currentUser?.email || ''
         };
       
-        // Check if the selected timeslot is already booked
-        const bookingsCollectionRef = collection(db, 'users', userEmail, 'bookings');
-        const existingBookingQuery = query(bookingsCollectionRef,
+        // Check if the selected timeslot is already booked for any user
+        const existingBookingQuery = query(collection(db, 'bookings'),
           where('selectedResidence', '==', selectedResidenceName),
           where('selectedDate', '==', selectedDate),
           where('selectedTime', '==', selectedTime),
@@ -289,7 +288,7 @@ const BookTimeslotScreen = () => {
           return;
         }
       
-        const bookingDocRef = await addDoc(bookingsCollectionRef, bookingData);
+        const bookingDocRef = await addDoc(collection(db, 'bookings'), bookingData);
         await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
       
         navigation.navigate('My Bookings', {
@@ -298,12 +297,11 @@ const BookTimeslotScreen = () => {
           selectedTime,
           selectedMachine: machine,
           bookingId: bookingDocRef.id,
-          userEmail,
         });
       } catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error
-      }           
+      }            
     }
   };
   return (
@@ -341,7 +339,7 @@ const BookTimeslotScreen = () => {
       <HorizontalDatepicker
         mode="gregorian"
         startDate={new Date()}
-        endDate={(function() {
+        endDate={(function () {
           const endDate = new Date();
           endDate.setDate(endDate.getDate() + 7);
           return endDate;
@@ -398,33 +396,33 @@ const BookTimeslotScreen = () => {
         ))}
       </ScrollView> */}
 
-<ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      {updatedTimes.map((item, index) => (
-        <Pressable
-          key={index}
-          onPress={() => setSelectedTime(item.time)}
-          style={
-            selectedTime.includes(item.time)
-              ? {
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {updatedTimes.map((item, index) => (
+          <Pressable
+            key={index}
+            onPress={() => setSelectedTime(item.time)}
+            style={
+              selectedTime.includes(item.time)
+                ? {
                   margin: 10,
                   borderRadius: 7,
                   padding: 15,
                   borderColor: "red",
                   borderWidth: 0.7,
                 }
-              : {
+                : {
                   margin: 10,
                   borderRadius: 7,
                   padding: 15,
                   borderColor: "gray",
                   borderWidth: 0.7,
                 }
-          }
-        >
-          <Text>{item.time}</Text>
-        </Pressable>
-      ))}
-    </ScrollView>
+            }
+          >
+            <Text>{item.time}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
       <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
         Select Washing Machine
       </Text>
