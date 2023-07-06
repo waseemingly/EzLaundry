@@ -6,7 +6,8 @@ import {
   TextInput,
   Pressable,
   ScrollView,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import React, { useState } from "react";
 import HorizontalDatepicker from "@awrminkhodaei/react-native-horizontal-datepicker";
@@ -15,7 +16,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { Picker } from '@react-native-picker/picker';
-import { collection, addDoc, getDocs, updateDoc, doc, setDoc, query, where, getDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, setDoc, query, where, getDoc, Timestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase'; // Assuming you have already initialized Firebase and obtained the Firestore instance
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
@@ -258,28 +259,73 @@ const BookTimeslotScreen = () => {
         { cancelable: false }
       );
     } else {
+      // try {
+      //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
+
+      //   const bookingData = {
+      //     selectedResidence: selectedResidenceName,
+      //     selectedDate,
+      //     selectedTime,
+      //     machine,
+      //     bookingId: '', // Placeholder for the booking ID
+      //     userId: auth.currentUser?.uid || '' ,// Add the user ID to the booking data
+      //     userEmail: auth.currentUser?.email || ''
+      //   };
+
+      //   // Check if the selected timeslot is already booked for any user
+      //   const existingBookingQuery = query(collection(db, 'bookings'),
+      //     where('selectedResidence', '==', selectedResidenceName),
+      //     where('selectedDate', '==', selectedDate),
+      //     where('selectedTime', '==', selectedTime),
+      //     where('machine', '==', machine)
+      //   );
+      //   const existingBookingSnapshot = await getDocs(existingBookingQuery);
+
+      //   if (!existingBookingSnapshot.empty) {
+      //     Alert.alert(
+      //       'Booking Already Exists',
+      //       'The selected booking slot is already taken. Please choose a different one.'
+      //     );
+      //     return;
+      //   }
+
+      //   const bookingDocRef = await addDoc(collection(db, 'bookings'), bookingData);
+      //   await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
+
+      //   navigation.navigate('My Bookings', {
+      //     selectedResidence,
+      //     selectedDate,
+      //     selectedTime,
+      //     selectedMachine: machine,
+      //     bookingId: bookingDocRef.id,
+      //   });
+
       try {
         const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-      
+
+        // Convert selectedDate to a Timestamp object
+        const selectedDateTimestamp = Timestamp.fromDate(selectedDate);
+        // const selectedTimeTimestamp = Timestamp.fromDate(selectedTime);
+
         const bookingData = {
           selectedResidence: selectedResidenceName,
-          selectedDate,
+          selectedDate: selectedDateTimestamp, // Store selectedDate as a Timestamp
           selectedTime,
           machine,
           bookingId: '', // Placeholder for the booking ID
-          userId: auth.currentUser?.uid || '' ,// Add the user ID to the booking data
+          userId: auth.currentUser?.uid || '', // Add the user ID to the booking data
           userEmail: auth.currentUser?.email || ''
         };
-      
+
         // Check if the selected timeslot is already booked for any user
         const existingBookingQuery = query(collection(db, 'bookings'),
           where('selectedResidence', '==', selectedResidenceName),
-          where('selectedDate', '==', selectedDate),
+          where('selectedDate', '==', selectedDateTimestamp), // Use the Timestamp object for comparison
           where('selectedTime', '==', selectedTime),
           where('machine', '==', machine)
         );
         const existingBookingSnapshot = await getDocs(existingBookingQuery);
-      
+
         if (!existingBookingSnapshot.empty) {
           Alert.alert(
             'Booking Already Exists',
@@ -287,10 +333,10 @@ const BookTimeslotScreen = () => {
           );
           return;
         }
-      
+
         const bookingDocRef = await addDoc(collection(db, 'bookings'), bookingData);
         await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-      
+
         navigation.navigate('My Bookings', {
           selectedResidence,
           selectedDate,
@@ -301,7 +347,7 @@ const BookTimeslotScreen = () => {
       } catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error
-      }            
+      }
     }
   };
   return (
@@ -336,9 +382,34 @@ const BookTimeslotScreen = () => {
         {route.params && route.params.selectedDate}
       </Text>
 
-      <HorizontalDatepicker
+      {/* <HorizontalDatepicker
         mode="gregorian"
         startDate={new Date()}
+        endDate={(function () {
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + 7);
+          return endDate;
+        })()}
+        initialSelectedDate={null}
+        onSelectedDateChange={(date) => setSelectedDate(date)}
+        selectedItemWidth={170}
+        unselectedItemWidth={38}
+        itemHeight={38}
+        itemRadius={10}
+        selectedItemTextStyle={styles.selectedItemTextStyle}
+        unselectedItemTextStyle={styles.selectedItemTextStyle}
+        selectedItemBackgroundColor="#222831"
+        unselectedItemBackgroundColor="#ececec"
+        flatListContainerStyle={styles.flatListContainerStyle}
+      /> */}
+
+      <HorizontalDatepicker
+        mode="gregorian"
+        startDate={(function () {
+          const startDate = new Date();
+          startDate.setDate(startDate.getDate() - 1);
+          return startDate;
+        })()}
         endDate={(function () {
           const endDate = new Date();
           endDate.setDate(endDate.getDate() + 7);

@@ -173,6 +173,7 @@ const MyBookingsScreen = ({ navigation }) => {
   const [cancelStatus, setCancelStatus] = useState(false); // Track the cancellation status
   
 
+
   const deleteExpiredBooking = async (bookingId) => {
     try {
       const bookingDocRef = doc(db, 'bookings', bookingId);
@@ -180,33 +181,23 @@ const MyBookingsScreen = ({ navigation }) => {
       const bookingData = bookingSnapshot.data();
   
       if (bookingData) {
-        const bookedDateTime = new Date(bookingData.selectedDate.seconds * 1000 + bookingData.selectedTime.seconds * 1000);
+        const bookedDateTime = bookingData.selectedDate.toDate();
         const currentTime = new Date();
+        const oneDayAfterBookedDate = new Date(bookedDateTime);
+        oneDayAfterBookedDate.setDate(oneDayAfterBookedDate.getDate() + 1);
   
-        const bookedDate = bookedDateTime.toDateString();
-        const currentDate = currentTime.toDateString();
-  
-        const bookedTime = bookedDateTime.getHours() * 60 + bookedDateTime.getMinutes();
-        const currentTimeMinutes = currentTime.getHours() * 60 + currentTime.getMinutes();
-  
-        const sixtyFiveMinutesInMinutes = 65;
-  
-        if (currentDate === bookedDate && currentTimeMinutes > bookedTime + sixtyFiveMinutesInMinutes) {
-          // Delete the booking document from Firestore if the current time has passed 65 minutes after the booked time
+        if (currentTime > oneDayAfterBookedDate) {
           await deleteDoc(bookingDocRef);
           console.log('Booking deleted successfully');
-        } else if (currentTime > bookedDateTime) {
-          // Delete the booking document from Firestore if the current time is later than the booked time on a different date
-          await deleteDoc(bookingDocRef);
-          console.log('Booking deleted successfully');
-        } else {
-          // Schedule a timer to delete the booking document after the booked time has passed
-          const timeDifference = bookedDateTime.getTime() - currentTime.getTime();
-          setTimeout(async () => {
-            await deleteDoc(bookingDocRef);
-            console.log('Booking deleted successfully');
-          }, timeDifference);
+          return;
         }
+  
+        // Schedule a timer to delete the booking document after one day has passed
+        const remainingTime = oneDayAfterBookedDate.getTime() - currentTime.getTime();
+        setTimeout(async () => {
+          await deleteDoc(bookingDocRef);
+          console.log('Booking deleted successfully');
+        }, remainingTime);
       }
     } catch (error) {
       console.error('Error deleting expired booking:', error);
@@ -231,9 +222,9 @@ const MyBookingsScreen = ({ navigation }) => {
         const bookingsData = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setBookings(bookingsData);
   
-        // bookingsData.forEach(booking => {
-        //   deleteExpiredBooking(booking.id);
-        // });
+        bookingsData.forEach(booking => {
+          deleteExpiredBooking(booking.id);
+        });
   
       } catch (error) {
         console.error('Error fetching bookings:', error);
@@ -291,36 +282,6 @@ const MyBookingsScreen = ({ navigation }) => {
       Alert.alert('Error', 'Failed to cancel the booking. Please try again.');
     }
   };
-    // const handleCancelBooking = async () => {
-    //   try {
-    //     const bookingDocRef = doc(db, 'users', userEmail, 'bookings', bookingId);
-    //     await deleteDoc(bookingDocRef);
-  
-    //     // Handle the cancellation success, e.g., show a confirmation message
-    //     console.log('Booking cancelled successfully');
-    //   } catch (error) {
-    //     console.error('Error canceling booking:', error);
-    //     // Handle the cancellation error
-    //   }
-      
-  
-    //   Alert.alert(
-    //     "Booking Canceled",
-    //     "Your booking has been canceled successfully.",
-    //     [
-    //       {
-    //         text: "OK",
-    //         onPress: () => {
-    //           // Redirect to the homepage
-    //           navigation.navigate("Home");
-    //         },
-    //       },
-    //     ],
-    //     { cancelable: false }
-    //   );
-  
-  
-    // };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
