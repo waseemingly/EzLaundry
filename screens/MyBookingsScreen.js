@@ -185,7 +185,7 @@ const MyBookingsScreen = ({ navigation }) => {
         const currentTime = new Date();
         const oneDayAfterBookedDate = new Date(bookedDateTime);
         oneDayAfterBookedDate.setDate(oneDayAfterBookedDate.getDate() + 1);
-  
+        console.log('bookedDateTime', bookedDateTime)
         if (currentTime > oneDayAfterBookedDate) {
           await deleteDoc(bookingDocRef);
           console.log('Booking deleted successfully');
@@ -283,83 +283,195 @@ const MyBookingsScreen = ({ navigation }) => {
     }
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {bookings.length === 0 ? (
-        <>
-          <Text style={styles.noBookingsText}>You have no bookings.</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
-            <Text style={styles.buttonText}>Go to Homepage</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          {bookings.map(booking => (
-            <View key={booking.id} style={styles.bookingItem}>
-              <Text style={styles.title}>Booking Details:</Text>
-              <Text>Booking ID: {booking.id}</Text>
-              <Text>Selected Residence: {booking.selectedResidence}</Text>
-              <Text>Selected Date: {booking.selectedDate && booking.selectedDate.toDate().toString()}</Text>
-              <Text>Selected Time: {booking.selectedTime}</Text>
-              <Text>Selected Washing Machine: {booking.machine}</Text>
+//   return (
+//     <ScrollView contentContainerStyle={styles.container}>
+//       {bookings.length === 0 ? (
+//         <>
+//           <Text style={styles.noBookingsText}>You have no bookings.</Text>
+//           <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+//             <Text style={styles.buttonText}>Go to Homepage</Text>
+//           </TouchableOpacity>
+//         </>
+//       ) : (
+//         <>
+//           {bookings.map(booking => (
+//             <View key={booking.id} style={styles.bookingItem}>
+//               <Text style={styles.title}>Booking Details:</Text>
+//               <Text>Booking ID: {booking.id}</Text>
+//               <Text>Selected Residence: {booking.selectedResidence}</Text>
+//               <Text>Selected Date: {booking.selectedDate && booking.selectedDate.toDate().toString()}</Text>
+//               <Text>Selected Time: {booking.selectedTime}</Text>
+//               <Text>Selected Washing Machine: {booking.machine}</Text>
               
-              <TouchableOpacity
-                onPress={() => handleCancelBooking(booking.id)}
-                style={[styles.button, styles.cancelButton]}
-              >
-                <Text style={styles.buttonText}>Cancel Booking</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+//               <TouchableOpacity
+//                 onPress={() => handleCancelBooking(booking.id)}
+//                 style={[styles.button, styles.cancelButton]}
+//               >
+//                 <Text style={styles.buttonText}>Cancel Booking</Text>
+//               </TouchableOpacity>
+//             </View>
+//           ))}
   
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
-            <Text style={styles.buttonText}>Go to Homepage</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </ScrollView>
-  );
-};
+//           <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+//             <Text style={styles.buttonText}>Go to Homepage</Text>
+//           </TouchableOpacity>
+//         </>
+//       )}
+//     </ScrollView>
+//   );
+// };
 
+// const styles = StyleSheet.create({
+//   container: {
+//     flexGrow: 1,
+//     padding: 20,
+//   },
+//   bookingItem: {
+//     backgroundColor: '#f0f0f0',
+//     padding: 10,
+//     borderRadius: 5,
+//     marginBottom: 10,
+//   },
+//   title: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     marginBottom: 10,
+//   },
+//   button: {
+//     backgroundColor: 'white',
+//     padding: 10,
+//     borderRadius: 5,
+//     marginVertical: 10,
+//     borderColor: 'red',
+//     borderWidth: 1,
+//   },
+//   buttonText: {
+//     fontWeight: 'bold',
+//     fontSize: 16,
+//   },
+//   noBookingsText: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'red',
+//     textAlign: 'center',
+//     marginTop: 50,
+//   },
+// });
+return (
+  <ScrollView contentContainerStyle={styles.container}>
+    {bookings.length === 0 ? (
+      <View style={styles.noBookingsContainer}>
+        <Text style={styles.noBookingsText}>You have no bookings.</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+          <Text style={styles.buttonText}>Go to Homepage</Text>
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <>
+        {bookings.map(booking => (
+          <View key={booking.id} style={styles.bookingItem}>
+            <Text style={styles.title}>Booking Details:</Text>
+            <Text style={styles.bookingInfo}>Booking ID: {booking.id}</Text>
+            <Text style={styles.bookingInfo}>Residence: {booking.selectedResidence}</Text>
+            <Text style={styles.bookingInfo}>Date: {booking.selectedDate && booking.selectedDate.toDate().toDateString()}</Text>
+            <Text style={styles.bookingInfo}>Time: {booking.selectedTime}</Text>
+            <Text style={styles.bookingInfo}>Machine: {booking.machine}</Text>
+            <TouchableOpacity
+              onPress={() => handleCancelBooking(booking.id)}
+              style={[styles.button, styles.cancelButton]}
+            >
+              <Text style={styles.buttonText}>Cancel Booking</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+          <Text style={styles.buttonText}>Go to Homepage</Text>
+        </TouchableOpacity>
+      </>
+    )}
+  </ScrollView>
+);
+        }
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    backgroundColor: '#F6F6F6',
+    paddingHorizontal: 20,
+    paddingVertical: 30,
   },
   bookingItem: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#333333',
+  },
+  bookingInfo: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#666666',
   },
   button: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    borderRadius: 8,
     marginVertical: 10,
-    borderColor: 'red',
+    borderColor: '#E74C3C',
     borderWidth: 1,
+    alignItems: 'center',
   },
+  // button1: {
+  //   backgroundColor: '#00FF00',
+  //   paddingVertical: 12,
+  //   borderRadius: 8,
+  //   marginVertical: 10,
+  //   borderColor: '#E74C3C',
+  //   borderWidth: 1,
+  //   alignItems: 'center',
+  // },
   buttonText: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: '#FFFFFF',
+  },
+  cancelButton: {
+    backgroundColor: '#E74C3C',
+    borderColor: '#E74C3C',
+  },
+  noBookingsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  homeButton: {
+    backgroundColor: '#00FF00',
+    borderColor: '#00FF00',
   },
   noBookingsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'red',
+    color: '#E74C3C',
     textAlign: 'center',
-    marginTop: 50,
+    marginBottom: 20,
   },
 });
 
-export default MyBookingsScreen;
 
+export default MyBookingsScreen;
 
 
 // const MyBookingsScreen= ({}) => {

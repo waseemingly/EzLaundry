@@ -169,76 +169,14 @@ const BookTimeslotScreen = () => {
   ];
 
   const navigation = useNavigation();
-  // const proceedToConfirm = async () => {
-  //   if (!selectedDate || !selectedTime || !machine || !selectedResidence) {
-  //     Alert.alert(
-  //       "Invalid Booking",
-  //       "Please select all the fields",
-  //       [
-  //         {
-  //           text: "Cancel",
-  //           onPress: () => console.log("Cancel Pressed"),
-  //           style: "cancel"
-  //         },
-  //         { text: "OK", onPress: () => console.log("OK Pressed") }
-  //       ],
-  //       { cancelable: false }
-  //     );
-  //   } 
-  //   if (selectedDate && selectedTime && machine && selectedResidence) {
-  //     navigation.navigate("My Bookings", {
-  //       selectedResidence: selectedResidence,
-  //       selectedDate: selectedDate,
-  //       selectedTime: selectedTime,
-  //       selectedMachine: machine,
-  //       email: auth.currentUser?.email || '',
-  //     }
-  //     )
-
-
-  //     try {
-  //       const userEmail = auth.currentUser?.email || '';
-  //       const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-
-  //       const bookingData = {
-  //         selectedResidence: selectedResidenceName,
-  //         selectedDate,
-  //         selectedTime,
-  //         machine,
-  //         bookingId: '', // Placeholder for the booking ID
-  //       };
-
-  //       const userBookingsRef = collection(db, 'users', userEmail, 'bookings');
-
-  //       const bookingDocRef = await addDoc(userBookingsRef, bookingData);
-
-  //       // Update the booking document with the generated ID
-  //       await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-
-  //       navigation.navigate('My Bookings', {
-  //         selectedResidence,
-  //         selectedDate,
-  //         selectedTime,
-  //         selectedMachine: machine,
-  //         bookingId: bookingDocRef.id,
-  //         userEmail: auth.currentUser?.email || '',
-  //       });
-  //     } 
-
-  //     catch (error) {
-  //       console.error('Error storing booking data:', error);
-  //       // Handle the error
-  //     }
-  //   }
-  // }
-
-  // Get the current hour and minute
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
   const currentMinute = currentDate.getMinutes();
 
   // Find the index of the next available time slot
   let startIndex = currentHour + 1; // Subtract 1 since array indices start from 0
+
+  // Create a new array with the updated order of times
 
   // Create a new array with the updated order of times
   const updatedTimes = [...times.slice(startIndex), ...times.slice(0, startIndex)];
@@ -259,46 +197,6 @@ const BookTimeslotScreen = () => {
         { cancelable: false }
       );
     } else {
-      // try {
-      //   const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
-
-      //   const bookingData = {
-      //     selectedResidence: selectedResidenceName,
-      //     selectedDate,
-      //     selectedTime,
-      //     machine,
-      //     bookingId: '', // Placeholder for the booking ID
-      //     userId: auth.currentUser?.uid || '' ,// Add the user ID to the booking data
-      //     userEmail: auth.currentUser?.email || ''
-      //   };
-
-      //   // Check if the selected timeslot is already booked for any user
-      //   const existingBookingQuery = query(collection(db, 'bookings'),
-      //     where('selectedResidence', '==', selectedResidenceName),
-      //     where('selectedDate', '==', selectedDate),
-      //     where('selectedTime', '==', selectedTime),
-      //     where('machine', '==', machine)
-      //   );
-      //   const existingBookingSnapshot = await getDocs(existingBookingQuery);
-
-      //   if (!existingBookingSnapshot.empty) {
-      //     Alert.alert(
-      //       'Booking Already Exists',
-      //       'The selected booking slot is already taken. Please choose a different one.'
-      //     );
-      //     return;
-      //   }
-
-      //   const bookingDocRef = await addDoc(collection(db, 'bookings'), bookingData);
-      //   await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
-
-      //   navigation.navigate('My Bookings', {
-      //     selectedResidence,
-      //     selectedDate,
-      //     selectedTime,
-      //     selectedMachine: machine,
-      //     bookingId: bookingDocRef.id,
-      //   });
 
       try {
         const selectedResidenceName = residences.find(residence => residence.id === selectedResidence)?.name || '';
@@ -351,59 +249,58 @@ const BookTimeslotScreen = () => {
     }
   };
   return (
-    <SafeAreaView>
-      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
-        Select Residence
-      </Text>
-      <View
-        style={styles.searchContainer}>
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedResidence}
-          onValueChange={setSelectedResidence}
-        >
-          <Picker.Item label="Select Residence" value="" />
-          {residences.map(({ id, name }) => (
-            <Picker.Item key={id} label={name} value={id} />
-          ))}
-        </Picker>
-
-        {/* <Feather name="search" size={24} color="#fd5c63" /> */}
-      </View>
-
-      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
-        Select Date
-      </Text>
-
-      <Text style={{
-        fontSize: 18, fontWeight: "400", color: "#088F8F",
-      }}
+    <ScrollView contentContainerStyle={styles.container}>
+    <Text style={styles.title}>Select Residence</Text>
+    <View style={styles.searchContainer}>
+      <Picker
+        style={styles.picker}
+        selectedValue={selectedResidence}
+        onValueChange={setSelectedResidence}
       >
-        {route.params && route.params.selectedDate}
-      </Text>
+        <Picker.Item label="Select Residence" value="" />
+        {residences.map(({ id, name }) => (
+          <Picker.Item key={id} label={name} value={id} />
+        ))}
+      </Picker>
+    </View>
+
+    <Text style={styles.title}>Select Date</Text>
+    <Text style={styles.selectedText}>
+      {route.params && route.params.selectedDate}
+    </Text>
+
+    <HorizontalDatepicker
+      mode="gregorian"
+      startDate={(function () {
+        const startDate = new Date();
+        const currentHour = startDate.getHours();
+        const currentMinute = startDate.getMinutes();
+
+        if (currentHour === 23 && currentMinute >= 0) {
+          startDate.setDate(startDate.getDate() + 1);
+        }
+
+        return startDate;
+      })()}
+      endDate={(function () {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+        return endDate;
+      })()}
+      initialSelectedDate={null}
+      onSelectedDateChange={(date) => setSelectedDate(date)}
+      selectedItemWidth={170}
+      unselectedItemWidth={38}
+      itemHeight={38}
+      itemRadius={10}
+      selectedItemTextStyle={styles.selectedItemTextStyle}
+      unselectedItemTextStyle={styles.selectedItemTextStyle}
+      selectedItemBackgroundColor="#222831"
+      unselectedItemBackgroundColor="#ececec"
+      flatListContainerStyle={styles.flatListContainerStyle}
+    />
 
       {/* <HorizontalDatepicker
-        mode="gregorian"
-        startDate={new Date()}
-        endDate={(function () {
-          const endDate = new Date();
-          endDate.setDate(endDate.getDate() + 7);
-          return endDate;
-        })()}
-        initialSelectedDate={null}
-        onSelectedDateChange={(date) => setSelectedDate(date)}
-        selectedItemWidth={170}
-        unselectedItemWidth={38}
-        itemHeight={38}
-        itemRadius={10}
-        selectedItemTextStyle={styles.selectedItemTextStyle}
-        unselectedItemTextStyle={styles.selectedItemTextStyle}
-        selectedItemBackgroundColor="#222831"
-        unselectedItemBackgroundColor="#ececec"
-        flatListContainerStyle={styles.flatListContainerStyle}
-      /> */}
-
-      <HorizontalDatepicker
         mode="gregorian"
         startDate={(function () {
           const startDate = new Date();
@@ -426,16 +323,10 @@ const BookTimeslotScreen = () => {
         selectedItemBackgroundColor="#222831"
         unselectedItemBackgroundColor="#ececec"
         flatListContainerStyle={styles.flatListContainerStyle}
-      />
+      /> */}
 
-      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
-        Select Time
-      </Text>
-
-      <Text style={{
-        fontSize: 18, fontWeight: "400", color: "#088F8F",
-      }}
-      >
+<Text style={styles.title}>Select Time</Text>
+      <Text style={styles.selectedText}>
         {route.params && route.params.selectedTime}
       </Text>
 
@@ -467,106 +358,149 @@ const BookTimeslotScreen = () => {
         ))}
       </ScrollView> */}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+<ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {updatedTimes.map((item, index) => (
-          <Pressable
+          <TouchableOpacity
             key={index}
             onPress={() => setSelectedTime(item.time)}
             style={
               selectedTime.includes(item.time)
                 ? {
-                  margin: 10,
-                  borderRadius: 7,
-                  padding: 15,
-                  borderColor: "red",
-                  borderWidth: 0.7,
-                }
-                : {
-                  margin: 10,
-                  borderRadius: 7,
-                  padding: 15,
-                  borderColor: "gray",
-                  borderWidth: 0.7,
-                }
+                    ...styles.timeSlot,
+                    backgroundColor: 'pink',
+                    borderColor: 'red',
+                  }
+                : styles.timeSlot
             }
           >
-            <Text>{item.time}</Text>
-          </Pressable>
+            <Text style={styles.timeSlotText}>{item.time}</Text>
+          </TouchableOpacity>
         ))}
       </ScrollView>
-      <Text style={{ fontSize: 16, fontWeight: "500", marginHorizontal: 10 }}>
-        Select Washing Machine
-      </Text>
 
-      <Text style={{
-        fontSize: 18, fontWeight: "400", color: "#088F8F",
-      }}
-      >
+      <Text style={styles.title}>Select Washing Machine</Text>
+      <Text style={styles.selectedText}>
         {route.params && route.params.selectedMachine}
       </Text>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {washingMachine.map((item, i) => (
-          <Pressable
+          <TouchableOpacity
             style={
               machine.includes(item.name)
                 ? {
-                  margin: 10,
-                  borderRadius: 7,
-                  padding: 15,
-                  borderColor: "red",
-                  borderWidth: 0.7,
-                }
-                : {
-                  margin: 10,
-                  borderRadius: 7,
-                  padding: 15,
-                  borderColor: "gray",
-                  borderWidth: 0.7,
-                }
+                    ...styles.machineButton,
+                    backgroundColor: 'pink',
+                    borderColor: 'red',
+                  }
+                : styles.machineButton
             }
             onPress={() => setMachine(item.name)}
             key={i}
           >
-            <Text>{item.name}</Text>
-          </Pressable>
+            <Text style={styles.machineButtonText}>{item.name}</Text>
+          </TouchableOpacity>
         ))}
       </ScrollView>
 
-      <Pressable
-        style={{
-          backgroundColor: "pink",
-          marginTop: 10,
-          padding: 20,
-          marginBottom: 50,
-          margin: 80,
-          borderRadius: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          alignSelf: "flex-end",
-          width: "60%"
-        }}
-      >
-
-
-        <Pressable onPress={proceedToConfirm}>
-          <Text style={{
-            fontSize: 17,
-            fontWeight: "600",
-            color: "white",
-            textAlign: "center",
-            marginLeft: 30
-          }}>
-            Confirm Booking
-          </Text>
-
-        </Pressable>
-      </Pressable>
-    </SafeAreaView>
+      <TouchableOpacity style={styles.confirmButton} onPress={proceedToConfirm}>
+        <Text style={styles.confirmButtonText}>Confirm Booking</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#F0F0F0',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 1,
+    color: '#000',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+    letterSpacing: 1,
+    textDecorationLine: 'underline',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  picker: {
+    flex: 1,
+    color: '#333',
+  },
+  selectedText: {
+    fontSize: 18,
+    fontWeight: '400',
+    color: '#088F8F',
+    marginBottom: 10,
+  },
+  timeSlotContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  timeSlot: {
+    margin: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timeSlotText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+  },
+  machineContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  machineButton: {
+    margin: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  machineButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    color: '#333',
+  },
+  confirmButton: {
+    backgroundColor: '#FF5E7D',
+    marginTop: 10,
+    paddingVertical: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+});
+
+
 export default BookTimeslotScreen;
 
-const styles = StyleSheet.create({});

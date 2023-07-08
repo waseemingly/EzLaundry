@@ -81,7 +81,7 @@ const LoginScreen = () => {
       <View style={styles.root}>
         <Image
           source={Logo}
-          style={[styles.logo, { height: height * 0.4 }]}
+          style={[styles.logo, { height: height * 0.3 }]}
           resizeMode="contain"
         />
       </View>
@@ -139,6 +139,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  root: {
+    alignItems: 'center',
+    marginBottom: 30
+  },
+  
   inputContainer: {
     width: '80%'
   },
@@ -156,51 +161,123 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: 'white',
     width: '100%',
-    padding: 15,
-    borderRadius: 20,
-    borderColor: 'pink',
+    paddingVertical: 15,
+    borderRadius: 10,
     alignItems: 'center',
+    marginTop: 10,
+    backgroundColor: '#f50057',
+  },
+  buttonLogin: {
+    backgroundColor: '#ff4081',
   },
   buttonOutline: {
-    backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: 'pink',
+    backgroundColor: 'transparent',
+    borderColor: '#f50057',
     borderWidth: 2,
   },
   buttonText: {
-    color: 'pink',
-    fontWeight: '700',
+    color: '#fff',
+    fontWeight: 'bold',
     fontSize: 16,
-  },
-  buttonlogin: {
-    backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: 'pink',
-    borderWidth: 2,
   },
   buttonOutlineText: {
-    color: 'pink',
-    fontWeight: '700',
+    color: '#f50057',
+    fontWeight: 'bold',
     fontSize: 16,
   },
-  buttonforgot: {
-    backgroundColor: 'white',
-    marginTop: 5,
-    borderColor: 'pink',
-    borderWidth: 2,
+  buttonForgot: {
+    backgroundColor: 'transparent',
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#333',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    width: '50%',
+    alignItems: 'center',
   },
-  buttonforgotText: {
-    color: 'pink',
-    fontWeight: '700',
+  buttonForgotText: {
+    color: '#333',
+    fontWeight: 'bold',
     fontSize: 16,
+    textDecorationLine: 'underline',
   },
   errorText: {
-    color: 'red',
+    color: '#f44336',
     marginBottom: 10,
     textAlign: 'center',
+    fontSize: 14,
   }
 });
 
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   inputContainer: {
+//     width: '80%'
+//   },
+//   input: {
+//     backgroundColor: 'white',
+//     paddingHorizontal: 30,
+//     paddingVertical: 20,
+//     borderRadius: 10,
+//     marginTop: 10,
+//   },
+//   buttonContainer: {
+//     width: '80%',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 40,
+//   },
+//   button: {
+//     backgroundColor: 'white',
+//     width: '100%',
+//     padding: 15,
+//     borderRadius: 20,
+//     borderColor: 'pink',
+//     alignItems: 'center',
+//   },
+//   buttonOutline: {
+//     backgroundColor: 'white',
+//     marginTop: 5,
+//     borderColor: 'pink',
+//     borderWidth: 2,
+//   },
+//   buttonText: {
+//     color: 'pink',
+//     fontWeight: '700',
+//     fontSize: 16,
+//   },
+//   buttonlogin: {
+//     backgroundColor: 'white',
+//     marginTop: 5,
+//     borderColor: 'pink',
+//     borderWidth: 2,
+//   },
+//   buttonOutlineText: {
+//     color: 'pink',
+//     fontWeight: '700',
+//     fontSize: 16,
+//   },
+//   buttonforgot: {
+//     backgroundColor: 'white',
+//     marginTop: 5,
+//     borderColor: 'pink',
+//     borderWidth: 2,
+//   },
+//   buttonforgotText: {
+//     color: 'pink',
+//     fontWeight: '700',
+//     fontSize: 16,
+//   },
+//   errorText: {
+//     color: 'red',
+//     marginBottom: 10,
+//     textAlign: 'center',
+//   }
+// });
 
