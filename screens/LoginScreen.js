@@ -106,7 +106,7 @@ const LoginScreen = () => {
         {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
 
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={handleLogin1}
           style={[styles.button, styles.buttonlogin]}
         >
           <Text style={styles.buttonText}>Login</Text>

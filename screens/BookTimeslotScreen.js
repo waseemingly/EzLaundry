@@ -224,7 +224,7 @@ const BookTimeslotScreen = () => {
         if (currentUserBookingsCount >= 3) {
           Alert.alert(
             'Booking Limit Exceeded',
-            'You have already made the maximum number of bookings allowed.'
+            'You are only allowed to make a maximum number of 3 bookings per week.'
           );
           return;
         }
