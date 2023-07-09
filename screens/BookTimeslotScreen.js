@@ -215,6 +215,20 @@ const BookTimeslotScreen = () => {
           userEmail: auth.currentUser?.email || ''
         };
 
+        // Check if the user has already made three bookings
+        const currentUserBookingsRef = collection(db, 'bookings');
+        const currentUserBookingsQuery = query(currentUserBookingsRef, where('userId', '==', bookingData.userId));
+        const currentUserBookingsSnapshot = await getDocs(currentUserBookingsQuery);
+        const currentUserBookingsCount = currentUserBookingsSnapshot.size;
+
+        if (currentUserBookingsCount >= 3) {
+          Alert.alert(
+            'Booking Limit Exceeded',
+            'You have already made the maximum number of bookings allowed.'
+          );
+          return;
+        }
+
         // Check if the selected timeslot is already booked for any user
         const existingBookingQuery = query(collection(db, 'bookings'),
           where('selectedResidence', '==', selectedResidenceName),
@@ -250,55 +264,55 @@ const BookTimeslotScreen = () => {
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-    <Text style={styles.title}>Select Residence</Text>
-    <View style={styles.searchContainer}>
-      <Picker
-        style={styles.picker}
-        selectedValue={selectedResidence}
-        onValueChange={setSelectedResidence}
-      >
-        <Picker.Item label="Select Residence" value="" />
-        {residences.map(({ id, name }) => (
-          <Picker.Item key={id} label={name} value={id} />
-        ))}
-      </Picker>
-    </View>
+      <Text style={styles.title}>Select Residence</Text>
+      <View style={styles.searchContainer}>
+        <Picker
+          style={styles.picker}
+          selectedValue={selectedResidence}
+          onValueChange={setSelectedResidence}
+        >
+          <Picker.Item label="Select Residence" value="" />
+          {residences.map(({ id, name }) => (
+            <Picker.Item key={id} label={name} value={id} />
+          ))}
+        </Picker>
+      </View>
 
-    <Text style={styles.title}>Select Date</Text>
-    <Text style={styles.selectedText}>
-      {route.params && route.params.selectedDate}
-    </Text>
+      <Text style={styles.title}>Select Date</Text>
+      <Text style={styles.selectedText}>
+        {route.params && route.params.selectedDate}
+      </Text>
 
-    <HorizontalDatepicker
-      mode="gregorian"
-      startDate={(function () {
-        const startDate = new Date();
-        const currentHour = startDate.getHours();
-        const currentMinute = startDate.getMinutes();
+      <HorizontalDatepicker
+        mode="gregorian"
+        startDate={(function () {
+          const startDate = new Date();
+          const currentHour = startDate.getHours();
+          const currentMinute = startDate.getMinutes();
 
-        if (currentHour === 23 && currentMinute >= 0) {
-          startDate.setDate(startDate.getDate() + 1);
-        }
+          if (currentHour === 23 && currentMinute >= 0) {
+            startDate.setDate(startDate.getDate() + 1);
+          }
 
-        return startDate;
-      })()}
-      endDate={(function () {
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 7);
-        return endDate;
-      })()}
-      initialSelectedDate={null}
-      onSelectedDateChange={(date) => setSelectedDate(date)}
-      selectedItemWidth={170}
-      unselectedItemWidth={38}
-      itemHeight={38}
-      itemRadius={10}
-      selectedItemTextStyle={styles.selectedItemTextStyle}
-      unselectedItemTextStyle={styles.selectedItemTextStyle}
-      selectedItemBackgroundColor="#222831"
-      unselectedItemBackgroundColor="#ececec"
-      flatListContainerStyle={styles.flatListContainerStyle}
-    />
+          return startDate;
+        })()}
+        endDate={(function () {
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + 7);
+          return endDate;
+        })()}
+        initialSelectedDate={null}
+        onSelectedDateChange={(date) => setSelectedDate(date)}
+        selectedItemWidth={170}
+        unselectedItemWidth={38}
+        itemHeight={38}
+        itemRadius={10}
+        selectedItemTextStyle={styles.selectedItemTextStyle}
+        unselectedItemTextStyle={styles.selectedItemTextStyle}
+        selectedItemBackgroundColor="#222831"
+        unselectedItemBackgroundColor="#ececec"
+        flatListContainerStyle={styles.flatListContainerStyle}
+      />
 
       {/* <HorizontalDatepicker
         mode="gregorian"
@@ -325,7 +339,7 @@ const BookTimeslotScreen = () => {
         flatListContainerStyle={styles.flatListContainerStyle}
       /> */}
 
-<Text style={styles.title}>Select Time</Text>
+      <Text style={styles.title}>Select Time</Text>
       <Text style={styles.selectedText}>
         {route.params && route.params.selectedTime}
       </Text>
@@ -358,7 +372,7 @@ const BookTimeslotScreen = () => {
         ))}
       </ScrollView> */}
 
-<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {updatedTimes.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -366,10 +380,10 @@ const BookTimeslotScreen = () => {
             style={
               selectedTime.includes(item.time)
                 ? {
-                    ...styles.timeSlot,
-                    backgroundColor: 'pink',
-                    borderColor: 'red',
-                  }
+                  ...styles.timeSlot,
+                  backgroundColor: 'pink',
+                  borderColor: 'red',
+                }
                 : styles.timeSlot
             }
           >
@@ -389,10 +403,10 @@ const BookTimeslotScreen = () => {
             style={
               machine.includes(item.name)
                 ? {
-                    ...styles.machineButton,
-                    backgroundColor: 'pink',
-                    borderColor: 'red',
-                  }
+                  ...styles.machineButton,
+                  backgroundColor: 'pink',
+                  borderColor: 'red',
+                }
                 : styles.machineButton
             }
             onPress={() => setMachine(item.name)}
