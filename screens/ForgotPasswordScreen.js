@@ -31,7 +31,7 @@ const ForgotPasswordScreen = () => {
           Alert.alert('Reset Email Sent', 'Please check your email for password reset instructions.');
         })
         .catch((error) => {
-          Alert.alert('Error', error.message);
+          Alert.alert('Error', 'This email is not registered!');
         });
 
 

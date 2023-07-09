@@ -10,6 +10,7 @@ import { auth, db, createUserWithEmailAndPassword, sendEmailVerification } from 
 import { setDoc,doc } from 'firebase/firestore';
 
 
+
 const RegisterScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -50,6 +51,8 @@ const RegisterScreen = () => {
     }; 
 
     const handleRegisterPress1 = () => {
+     
+
       if (!email.endsWith('@nus.edu.sg') && !email.endsWith('@u.nus.edu')) {
         alert('Please register with an NUS email.');
         return;
