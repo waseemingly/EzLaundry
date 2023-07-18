@@ -1,4 +1,5 @@
 // Import the functions you need from the SDKs you need
+import 'firebase/compat';
 import * as firebase from "firebase/compat";
 import {getFirestore} from "firebase/firestore";
 import 'firebase/compat/database';
