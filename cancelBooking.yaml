@@ -1,0 +1,6 @@
+appId: com.example.app
+---
+
+- tapOn: "Cancel Booking"
+- tapOn: "Yes, cancel"
+- assertVisible: "Your booking has been canceled successfully."

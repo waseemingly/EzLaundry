@@ -1,7 +1,7 @@
 
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, useWindowDimensions, Alert } from 'react-native';
 import { auth } from '../firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import Logo from '../assets/Ezlaundry-icon.png';
@@ -14,6 +14,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const navigation = useNavigation();
 
@@ -23,6 +24,7 @@ const LoginScreen = () => {
     setLoading(true);
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
+        setLoggedIn(true);
         navigation.replace("Home");
       }
     });
@@ -35,6 +37,7 @@ const LoginScreen = () => {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log('Logged in with:', user.email);
+        setLoggedIn(true);
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {
@@ -44,6 +47,7 @@ const LoginScreen = () => {
         } else {
           setErrorMessage(error.message);
         }
+        setLoggedIn(false);
       });
   };
 
@@ -62,6 +66,7 @@ const LoginScreen = () => {
           return;
         }
         console.log('Logged in with:', user.email);
+        setLoggedIn(true);
       })
       .catch(error => {
         if (error.code === 'auth/user-not-found') {
@@ -71,8 +76,16 @@ const LoginScreen = () => {
         } else {
           setErrorMessage(error.message);
         }
+        setLoggedIn(false);
       });
   };
+
+  useEffect(() => {
+    if (loggedIn) {
+      Alert.alert('Logged in successfully'); // Display alert when loggedIn state is true
+    }
+  }, [loggedIn]);
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -106,11 +119,15 @@ const LoginScreen = () => {
         {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
 
         <TouchableOpacity
-          onPress={handleLogin1}
+          onPress={handleLogin}
           style={[styles.button, styles.buttonlogin]}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+
+        {loggedIn && ( // Conditionally render the "Logged in successfully" message
+          <Text style={styles.successMessage}>Logged in successfully</Text>
+        )}
 
         <TouchableOpacity
           onPress={() => navigation.navigate('Register')}
@@ -278,6 +295,11 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
     textAlign: 'center',
-  }
+  },
+  successMessage: {
+    color: 'green',
+    textAlign: 'center',
+    marginTop: 10,
+  },
 });
 

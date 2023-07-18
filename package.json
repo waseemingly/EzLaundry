@@ -6,7 +6,14 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|(firebase/compat))"
+    ]
   },
   "dependencies": {
     "@awrminkhodaei/react-native-horizontal-datepicker": "^0.1.6",
@@ -19,6 +26,7 @@
     "expo": "^48.0.19",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.23.0",
+    "jest-expo": "^49.0.0",
     "moment-jalaali": "^0.10.0",
     "react": "18.2.0",
     "react-native-animatable": "^1.3.3",

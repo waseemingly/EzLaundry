@@ -249,13 +249,23 @@ const BookTimeslotScreen = () => {
         const bookingDocRef = await addDoc(collection(db, 'bookings'), bookingData);
         await updateDoc(bookingDocRef, { bookingId: bookingDocRef.id });
 
-        navigation.navigate('My Bookings', {
-          selectedResidence,
-          selectedDate,
-          selectedTime,
-          selectedMachine: machine,
-          bookingId: bookingDocRef.id,
-        });
+        Alert.alert(
+          "Booking Created",
+          "Your booking has been created successfully",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate('My Bookings', {
+                selectedResidence,
+                selectedDate,
+                selectedTime,
+                selectedMachine: machine,
+                bookingId: bookingDocRef.id,
+              })
+            }
+          ],
+          { cancelable: false }
+        );
       } catch (error) {
         console.error('Error storing booking data:', error);
         // Handle the error
@@ -431,7 +441,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   title: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 1,
     color: '#000',
@@ -445,9 +455,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-    marginBottom: 10,
+    paddingVertical: 1,
+    borderRadius: 20,
+    marginBottom: 5,
   },
   picker: {
     flex: 1,

@@ -1,0 +1,15 @@
+appId: com.example.app
+---
+# needed to open app in expo
+- openLink: exp://192.168.18.6:19000
+# tap on email
+- tapOn: "Email"
+- inputText: a@gmail.com
+# tap on password
+- tapOn: "Password"
+# enter password
+- inputText: 111111
+# tap on sign in
+- tapOn: "Login"
+- assertVisible: "Logged in successfully"
+- tapOn: "OK"

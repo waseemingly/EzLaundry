@@ -1,0 +1,8 @@
+appId: com.example.app
+---
+- tapOn:
+    point: "50%,55%"
+- runFlow:
+    when:
+      notVisible: "You have no bookings."
+    file: "deleteBooking.yaml"

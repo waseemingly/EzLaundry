@@ -1,0 +1,14 @@
+appId: com.example.app
+---
+- tapOn:
+    point: "50%,37%"
+- tapOn:
+    point: "50%,37%"
+- tapOn:
+    point: "50%,60%"
+- tapOn:
+    point: "50%,74%"
+- tapOn:
+    point: "30%,89%"
+- tapOn: "Confirm Booking"
+- assertVisible: "Your booking has been created successfully"

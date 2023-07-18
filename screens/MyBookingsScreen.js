@@ -366,6 +366,32 @@ return (
           <Text style={styles.buttonText}>Go to Homepage</Text>
         </TouchableOpacity>
       </View>
+    ) : bookings.length >= 3 ? (
+      <>
+      <View style={styles.maxBookingsContainer}>
+        <Text style={styles.maxBookingsText}>You have reached the maximum number of bookings.</Text>
+      </View>
+      {bookings.map(booking => (
+        <View key={booking.id} style={styles.bookingItem}>
+          <Text style={styles.title}>Booking Details:</Text>
+          <Text style={styles.bookingInfo}>Booking ID: {booking.id}</Text>
+          <Text style={styles.bookingInfo}>Residence: {booking.selectedResidence}</Text>
+          <Text style={styles.bookingInfo}>Date: {booking.selectedDate && booking.selectedDate.toDate().toDateString()}</Text>
+          <Text style={styles.bookingInfo}>Time: {booking.selectedTime}</Text>
+          <Text style={styles.bookingInfo}>Machine: {booking.machine}</Text>
+          <TouchableOpacity
+            onPress={() => handleCancelBooking(booking.id)}
+            style={[styles.button, styles.cancelButton]}
+          >
+            <Text style={styles.buttonText}>Cancel Booking</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+
+      <TouchableOpacity onPress={() => navigation.navigate('Home')} style={[styles.button, styles.homeButton]}>
+          <Text style={styles.buttonText}>Go to Homepage</Text>
+      </TouchableOpacity>
+      </>
     ) : (
       <>
         {bookings.map(booking => (
@@ -467,6 +493,17 @@ const styles = StyleSheet.create({
     color: '#E74C3C',
     textAlign: 'center',
     marginBottom: 20,
+  },
+  maxBookingsContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  maxBookingsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'red',
   },
 });
 

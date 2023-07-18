@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EzLaundry",
-    "slug": "EzLaundry",
+    "slug": "ezlaundry",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/Ezlaundry-icon.png",
@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/booking.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3dfef6a3-4e6a-4403-a5d2-37017e7b52a7"
+      }
+    },
+    "owner": "waseemingly"
   }
 }
