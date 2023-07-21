@@ -5,14 +5,10 @@ appId: com.example.app
 # tap on email
 - tapOn: "Email"
 - inputRandomEmail
-# hide keyboard
-- hideKeyboard
 # tap on password
 - tapOn: "Password"
 # enter password
 - inputRandomText
-# hide keyboard
-- hideKeyboard
 # tap on sign in
 - tapOn: "Login"
 - assertVisible: "Email does not have an account. Please sign up."

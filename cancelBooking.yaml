@@ -1,6 +1,10 @@
 appId: com.example.app
 ---
-
-- tapOn: "Cancel Booking"
-- tapOn: "Yes, cancel"
-- assertVisible: "Your booking has been canceled successfully."
+#start from homepage
+- tapOn:
+    point: "50%,55%"
+#cancel a booking only when there are current bookings 
+- runFlow:
+    when:
+      notVisible: "You have no bookings."
+    file: "deleteBooking.yaml"

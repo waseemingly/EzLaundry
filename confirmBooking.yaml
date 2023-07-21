@@ -1,5 +1,6 @@
 appId: com.example.app
 ---
+#start from homepage
 - tapOn:
     point: "50%,37%"
 - tapOn:
